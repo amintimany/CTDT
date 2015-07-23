@@ -1,4 +1,4 @@
-Require Import Lattice.PreOrder.
+Require Export Lattice.PreOrder.
 Require Import Coq.Sets.Ensembles.
 
 Local Open Scope order_scope.
@@ -8,8 +8,17 @@ Record Complete_Lattice : Type :=
   {
     CMSL_PO :> PreOrder;
     CMSL_meets : ∀ (P : CMSL_PO → Prop), ⊔ᵍ P;
-    CMSL_joins : ∀ (P : CMSL_PO → Prop), ⊓ᵍ P
+    CMSL_joins : ∀ (P : CMSL_PO → Prop), ⊓ᵍ P;
+    CMSL_bot : CMSL_PO;
+    CMSL_bot_bottom : ∀ (x : CMSL_PO), CMSL_bot ⊑ x
   }.
+
+Arguments CMSL_PO _ : assert.
+Arguments CMSL_meets {_} _, _ _.
+Arguments CMSL_joins {_} _, _ _.
+Arguments CMSL_bot {_}.
+
+Notation "⊥" := CMSL_bot : lattice_scope.
 
 Definition Lat_LUB {Lat : Complete_Lattice} (P : Lat → Prop) : ⊔ᵍ P :=
   (CMSL_meets Lat P).
@@ -30,3 +39,11 @@ Notation "⊓ᵍ Q" := (Lat_GLB Q) : lattice_scope.
 Notation "x ⊔ y" := (Lat_LUB_Pair x y) : lattice_scope.
   
 Notation "x ⊓ y" := (Lat_GLB_Pair x y) : lattice_scope.
+
+Hint Resolve CMSL_bot_bottom.
+
+Theorem Bottom_Unique {Lat : Complete_Lattice} (b : Lat) : (∀ x, b ⊑ x) → b = ⊥%lattice.
+Proof.
+  intros H.
+  apply PO_ASym; auto.
+Qed.

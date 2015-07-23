@@ -29,6 +29,12 @@ Reserved Notation "⊓ᵍ y" (at level 75).
 
 Reserved Notation "⊔ᵍ y" (at level 75).
 
+Reserved Notation "∂( x , y )" (at level 75, no associativity).
+
+Reserved Notation "'μ' x" (at level 75, no associativity).
+
 Delimit Scope order_scope with order.
 
 Delimit Scope lattice_scope with lattice.
+
+Delimit Scope metric_scope with metric.
