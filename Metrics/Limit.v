@@ -14,10 +14,10 @@ Section Limit.
     {
       Lim :> U;
       Lim_limit :
-        ∀ (epsilon : L),
-          ⊥ ⊏ epsilon →
+        ∀ (ε : L),
+          ⊥ ⊏ ε →
           ∃ (N : nat), ∀ (n : nat), N ≤ n →
-              ∂(Seq n, Lim) ⊑ epsilon
+              ∂(Seq n, Lim) ⊑ ε
     }.
 
 End Limit.

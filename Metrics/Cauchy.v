@@ -20,10 +20,10 @@ distance from each other.
     {
       CHS_seq :> Sequence U;
       CHS_cauchy :
-        ∀ (epsilon : L),
-          ⊥ ⊏ epsilon →
+        ∀ (ε : L),
+          ⊥ ⊏ ε →
           ∃ (N : nat), ∀ (n m : nat),
-              N <= n → N ≤ m → (∂(CHS_seq n, CHS_seq m)) ⊑ epsilon
+              N <= n → N ≤ m → (∂(CHS_seq n, CHS_seq m)) ⊑ ε
     }.
 
 End Cauchy_Sequence.
