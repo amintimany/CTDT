@@ -1,4 +1,4 @@
-Require Export Lattice.PreOrder Lattice.Lattice.
+Require Export Lattice.PartialOrder Lattice.CompleteLattice.
 
 Local Open Scope lattice_scope.
 
@@ -7,7 +7,7 @@ Local Open Scope lattice_scope.
 is replaced with ultrametric inequality:
      ∀ x y, ∂(x, z) ≤ max{∂(x, y), ∂(y, z)}
 *)
-Record UltraMetric (L : Complete_Lattice) : Type :=
+Record UltraMetric (L : CompleteLattice) : Type :=
   {
     UM_Carrier :> Type;
     UM_distance : UM_Carrier → UM_Carrier → L where "∂( x , y )" := (UM_distance x y);
@@ -25,4 +25,4 @@ Arguments UM_distance {_ _} _ _.
 Notation "∂( x , y )" := (UM_distance x y) : metric_scope.
 
 (** A sequence is a function from natural numbers to the metric space. *)
-Definition Sequence {L : Complete_Lattice} (U : UltraMetric L) := nat → U.
+Definition Sequence {L : CompleteLattice} (U : UltraMetric L) := nat → U.

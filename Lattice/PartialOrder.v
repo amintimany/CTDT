@@ -5,7 +5,7 @@ Require Export Essentials.Notations.
 Local Open Scope order_scope.
 
 (** Basic Definition of a preorder relation. *)
-Record PreOrder : Type :=
+Record PartialOrder : Type :=
   {
     PO_Carrier :> Type;
     PO_LE : PO_Carrier → PO_Carrier → Prop where "x ⊑ y" := (PO_LE x y);
@@ -23,12 +23,12 @@ Arguments PO_Trans {_} _ _ _ _ _.
 
 Notation "x ⊑ y" := (PO_LE x y) : order_scope.
 
-Definition PO_LT {p : PreOrder} (x y : p) := (x ⊑ y)%order ∧ x ≠ y.
+Definition PO_LT {p : PartialOrder} (x y : p) := (x ⊑ y)%order ∧ x ≠ y.
 
 Notation "x ⊏ y" := (PO_LT x y) : order_scope.
   
 (** A monotone function is order preserving. *)
-Record Monotone (A B : PreOrder) : Type :=
+Record Monotone (A B : PartialOrder) : Type :=
   {
     MNT_fun :> A → B;
     MNT_monotone : ∀ x y, x ⊑ y → MNT_fun x ⊑ MNT_fun y
@@ -37,7 +37,7 @@ Record Monotone (A B : PreOrder) : Type :=
 Local Hint Resolve MNT_monotone.
 
 Program Definition Monotone_comp
-           {A B C : PreOrder}
+           {A B C : PartialOrder}
            (f : Monotone A B)
            (g : Monotone B C)
   :
@@ -49,7 +49,7 @@ Program Definition Monotone_comp
 
 (** Greatest lower bound and least upper bound in a preorder. *)
 Section LUB_GLB.
-  Context {A : PreOrder}.
+  Context {A : PartialOrder}.
 
   Section Generalized.
     Context (P : A → Prop).
@@ -95,14 +95,14 @@ Notation "x ⊓ y" := (GLB_Pair x y) : order_scope.
 
 Hint Resolve PO_Refl PO_ASym PO_Trans.
 
-Theorem LE_LT_Trans {A : PreOrder} : ∀ (x y z : A), x ⊑ y → y ⊏ z → x ⊏ z.
+Theorem LE_LT_Trans {A : PartialOrder} : ∀ (x y z : A), x ⊑ y → y ⊏ z → x ⊏ z.
 Proof.
   intros x y z H1 [H21 H22]; split; eauto.
   intros eq.
   rewrite eq in H1; auto.
 Qed.
 
-Theorem LT_LE_Trans {A : PreOrder} : ∀ (x y z : A), x ⊏ y → y ⊑ z → x ⊏ z.
+Theorem LT_LE_Trans {A : PartialOrder} : ∀ (x y z : A), x ⊏ y → y ⊑ z → x ⊏ z.
 Proof.
   intros x y z [H11 H12] H2; split; eauto.
   intros eq.

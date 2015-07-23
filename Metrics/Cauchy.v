@@ -1,9 +1,9 @@
 Require Import Essentials.Notations.
-Require Import Lattice.Lattice.
+Require Import Lattice.CompleteLattice.
 Require Import Metrics.UltraMetric.
 
 Section Cauchy_Sequence.
-  Context {L : Complete_Lattice} (U : UltraMetric L).
+  Context {L : CompleteLattice} (U : UltraMetric L).
 
   Local Open Scope order_scope.
   Local Open Scope lattice_scope.

@@ -8,7 +8,7 @@ Local Open Scope order_scope.
 Local Open Scope lattice_scope.
 
 Section Mappings.
-  Context {L : Complete_Lattice} (U U' : UltraMetric L).
+  Context {L : CompleteLattice} (U U' : UltraMetric L).
   
   (** A non-expansive function is one that does not increase distance.
 Here, as ultrametric spaces can have different measures, we need a
@@ -25,7 +25,7 @@ measure of the domain of the function.
   (**
 A mechanism to indicate contraction rate of a contractive mapping.
    *)
-  Record ContrRate (L : Complete_Lattice) : Type :=
+  Record ContrRate (L : CompleteLattice) : Type :=
     {
       CR_fun :> L → L;
       CR_monotone : ∀ x y, x ⊑ y → CR_fun x ⊑ CR_fun y;
@@ -41,7 +41,7 @@ measure of the domain of the function.
 
 We also require a contraction rate.
    *)
-  Record Contractive {L : Complete_Lattice} (U U' : UltraMetric L) : Type :=
+  Record Contractive {L : CompleteLattice} (U U' : UltraMetric L) : Type :=
     {
       CN_fun :> U → U';
       CN_ContrRate : ContrRate L;
@@ -62,7 +62,7 @@ Arguments CN_ContrRate {_ _ _} _.
 Arguments CN_contractive {_ _ _} _ _ _.
 
 Section Contr_Comp.
-  Context {L : Complete_Lattice}
+  Context {L : CompleteLattice}
           {U U' U'' : UltraMetric L}
   .
         
@@ -111,7 +111,7 @@ contractive. *)
 End Contr_Comp.
 
 Section Contractive_Continuous.
-  Context {L : Complete_Lattice}
+  Context {L : CompleteLattice}
           {U : UltraMetric L}
           (Seq : Sequence U)
           (lm : Limit Seq)
