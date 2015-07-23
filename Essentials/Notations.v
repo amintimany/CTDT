@@ -17,6 +17,10 @@ Notation "¬ x" := (~x) (at level 75, right associativity) : type_scope.
 
 Notation "x ≠ y" := (x <> y) (at level 70) : type_scope.
 
+Notation "x ≤ y" := (le x y) (at level 70, no associativity).
+
+Notation "x ≥ y" := (ge x y) (at level 70, no associativity).
+
 Reserved Notation "x ⊑ y" (at level 70, no associativity).
 
 Reserved Notation "x ⊏ y" (at level 70, no associativity).

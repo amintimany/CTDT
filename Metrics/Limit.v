@@ -1,9 +1,10 @@
+Require Import Essentials.Notations.
 Require Import Metrics.UltraMetric.
 Require Import Lattice.Lattice.
 
 (** Limit of a sequence in an ultra metric space. *)
 Section Limit.
-  Context {U : UltraMetric} (Seq : Sequence U).
+  Context {L : Complete_Lattice} {U : UltraMetric L} (Seq : Sequence U).
 
   Local Open Scope order_scope.
   Local Open Scope lattice_scope.
@@ -13,10 +14,13 @@ Section Limit.
     {
       Lim :> U;
       Lim_limit :
-        ∀ (epsilon : μ U),
+        ∀ (epsilon : L),
           ⊥ ⊏ epsilon →
-          ∃ (N : nat), ∀ (n : nat),
+          ∃ (N : nat), ∀ (n : nat), N ≤ n →
               ∂(Seq n, Lim) ⊑ epsilon
     }.
 
 End Limit.
+
+Arguments Lim {_ _ _} _.
+Arguments Lim_limit {_ _ _} _ _ _.

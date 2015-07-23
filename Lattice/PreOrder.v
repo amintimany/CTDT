@@ -1,3 +1,4 @@
+Require Import Coq.Program.Tactics.
 Require Import Coq.Sets.Ensembles.
 Require Export Essentials.Notations.
 
@@ -25,13 +26,26 @@ Notation "x ⊑ y" := (PO_LE x y) : order_scope.
 Definition PO_LT {p : PreOrder} (x y : p) := (x ⊑ y)%order ∧ x ≠ y.
 
 Notation "x ⊏ y" := (PO_LT x y) : order_scope.
-
+  
 (** A monotone function is order preserving. *)
 Record Monotone (A B : PreOrder) : Type :=
   {
     MNT_fun :> A → B;
     MNT_monotone : ∀ x y, x ⊑ y → MNT_fun x ⊑ MNT_fun y
   }.
+
+Local Hint Resolve MNT_monotone.
+
+Program Definition Monotone_comp
+           {A B C : PreOrder}
+           (f : Monotone A B)
+           (g : Monotone B C)
+  :
+    Monotone A C :=
+  {|
+    MNT_fun := fun x => g (f x)
+  |}.
+
 
 (** Greatest lower bound and least upper bound in a preorder. *)
 Section LUB_GLB.

@@ -1,7 +1,9 @@
 Essentials/Notations.v
+Essentials/Definitions.v
 Lattice/PreOrder.v
 Lattice/Lattice.v
 Metrics/UltraMetric.v
+Metrics/Mappings.v
 Metrics/Cauchy.v
 Metrics/Limit.v
 Metrics/Complete_UltraMetric.v

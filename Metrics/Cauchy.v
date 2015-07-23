@@ -3,7 +3,7 @@ Require Import Lattice.Lattice.
 Require Import Metrics.UltraMetric.
 
 Section Cauchy_Sequence.
-  Context (U : UltraMetric).
+  Context {L : Complete_Lattice} (U : UltraMetric L).
 
   Local Open Scope order_scope.
   Local Open Scope lattice_scope.
@@ -20,10 +20,10 @@ distance from each other.
     {
       CHS_seq :> Sequence U;
       CHS_cauchy :
-        ∀ (epsilon : μ U),
+        ∀ (epsilon : L),
           ⊥ ⊏ epsilon →
           ∃ (N : nat), ∀ (n m : nat),
-              N <= n → N <= m → (∂(CHS_seq n, CHS_seq m)) ⊑ epsilon
+              N <= n → N ≤ m → (∂(CHS_seq n, CHS_seq m)) ⊑ epsilon
     }.
 
 End Cauchy_Sequence.
