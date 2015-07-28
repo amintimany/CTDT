@@ -1,4 +1,4 @@
-Require Import Essentials.Notations Essentials.Definitions.
+Require Import Essentials.Notations Essentials.Facts_Tactics Essentials.Definitions.
 Require Import Metrics.UltraMetric.
 Require Import Metrics.Limit.
 
@@ -9,6 +9,12 @@ Local Open Scope lattice_scope.
 
 Section Mappings.
   Context {L : CompleteLattice} (U U' : UltraMetric L).
+
+  Local Hint Extern 1 => progress cbn in *.
+  
+  Local Hint Extern 1 => ElimEq.
+
+  Local Hint Extern 1 => PIR.
   
   (** A non-expansive function is one that does not increase distance.
 Here, as ultrametric spaces can have different measures, we need a
@@ -22,10 +28,16 @@ measure of the domain of the function.
         ∀ x y, (∂(NE_fun x, NE_fun y) ⊑ ∂(x, y))%order%metric
     }.
 
+  (** Two non-expansive mappings are equal if their underlying maps are. *)
+  Theorem NonExpansive_eq_simplify (f g : NonExpansive) : f = g :> (_ → _) → f = g.
+  Proof.
+    intros; destruct f; destruct g; auto.
+  Qed.
+    
   (**
 A mechanism to indicate contraction rate of a contractive mapping.
    *)
-  Record ContrRate (L : CompleteLattice) : Type :=
+  Record ContrRate : Type :=
     {
       CR_fun :> L → L;
       CR_monotone : ∀ x y, x ⊑ y → CR_fun x ⊑ CR_fun y;
@@ -35,6 +47,14 @@ A mechanism to indicate contraction rate of a contractive mapping.
         ∀ (ε ε' : L), ⊥ ⊏ ε → ∃ n, (iterate CR_fun ε' n) ⊑ ε
     }.
 
+  (** Two contraction rates are equal if their underlying maps are. *)
+  Theorem ContrRate_eq_simplify (f g : ContrRate) : f = g :> (_ → _) → f = g.
+  Proof.
+    intros; destruct f; destruct g; auto.
+  Qed.
+
+  Local Hint Extern 1 => rewrite ContrRate_eq_simplify.
+
   (** A contractive function is one that does decreases distance.
 Here, as ultrametric spaces can have different measures, we need a
 mapping from the measure of the codomain of the function to the
@@ -42,15 +62,27 @@ measure of the domain of the function.
 
 We also require a contraction rate.
    *)
-  Record Contractive {L : CompleteLattice} (U U' : UltraMetric L) : Type :=
+  Record Contractive : Type :=
     {
       CN_fun :> U → U';
-      CN_ContrRate : ContrRate L;
+      CN_ContrRate : ContrRate;
       CN_contractive :
         ∀ x y, (∂(CN_fun x, CN_fun y) ⊑ CN_ContrRate (∂(x, y)))%order%metric
     }.
 
+  (** Two contractive mappings are equal if their underlying maps are. *)
+  Theorem Contractive_eq_simplify (f g : Contractive) :
+    f = g :> (_ → _) →
+    (CN_ContrRate f) = (CN_ContrRate g) →
+    f = g
+  .
+  Proof.
+    intros; destruct f; destruct g; auto.
+  Qed.
+
 End Mappings.
+
+Arguments ContrRate _ : clear implicits.
 
 Arguments NE_fun {_ _ _} _ _.
 Arguments NE_non_expansive {_ _ _} _ _ _.
@@ -65,6 +97,76 @@ Arguments CN_contractive {_ _ _} _ _ _.
 
 Notation "'ρ' f" := (CN_ContrRate f) : metric_scope.
 
+Section NonExp_compose_and_id.
+  Context {L : CompleteLattice}.
+
+  Local Obligation Tactic := auto.
+  
+  Section NonExp_id.
+    Context (U : UltraMetric L).
+    
+    (** Idenetity non-expansive mapping. *)
+    Program Definition NonExp_id : NonExpansive U U :=
+      {|
+        NE_fun := fun x => x
+      |}.
+
+  End NonExp_id.
+  
+  Section NonExp_compose.
+    Context {U U' U'' : UltraMetric L}
+            (F : NonExpansive U U')
+            (G : NonExpansive U' U'').
+    
+    Local Obligation Tactic := cbn; eauto.
+
+    Local Hint Extern 1 => apply NE_non_expansive.
+    
+    (** Composition of non-expansive mappings *)
+    Program Definition NonExp_compose : NonExpansive U U'' :=
+      {|
+      NE_fun := fun x => G (F x)
+      |}.
+
+  End NonExp_compose.
+
+  Local Hint Extern 1 => apply NonExpansive_eq_simplify.
+
+  Section NonExp_compose_assoc.
+    Context {U1 U2 U3 U4 : UltraMetric L}
+            (F : NonExpansive U1 U2)
+            (G : NonExpansive U2 U3)
+            (H : NonExpansive U3 U4).
+    
+    (** Composition of non-expansive mappings *)
+    Theorem NonExp_compose_assoc :
+      NonExp_compose F (NonExp_compose G H) = NonExp_compose (NonExp_compose F G) H.
+    Proof.
+      auto.
+    Qed.
+
+  End NonExp_compose_assoc.
+
+  Section NonExp_id_unit.
+    Context {U U' : UltraMetric L}
+            (F : NonExpansive U U').
+
+    (** NonExp_id is the left unit of composition *)
+    Theorem NonExp_id_unit_left : NonExp_compose F (NonExp_id _) = F.
+    Proof.
+      auto.
+    Qed.
+
+    (** NonExp_id is the right unit of composition *)
+    Theorem NonExp_id_unit_right : NonExp_compose (NonExp_id _) F = F.
+    Proof.
+      auto.
+    Qed.
+
+  End NonExp_id_unit.
+
+End NonExp_compose_and_id.
+    
 Section Contr_Comp.
   Context {L : CompleteLattice}
           {U U' U'' : UltraMetric L}
