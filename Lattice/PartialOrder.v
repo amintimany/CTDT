@@ -1,6 +1,6 @@
 Require Import Coq.Program.Tactics.
 Require Import Coq.Sets.Ensembles.
-Require Export Essentials.Notations.
+Require Export Essentials.Notations Essentials.Definitions.
 
 Local Open Scope order_scope.
 
@@ -46,6 +46,20 @@ Program Definition Monotone_comp
     MNT_fun := fun x => g (f x)
   |}.
 
+Program Definition iterate_Monotone
+        {A : PartialOrder}
+        (f : Monotone A A)
+        (n : nat)
+  :
+    Monotone A A :=
+  {|
+    MNT_fun := fun x => iterate f x n
+  |}.
+
+Next Obligation.
+Proof.
+  induction n; cbn; auto.
+Qed.
 
 (** Greatest lower bound and least upper bound in a preorder. *)
 Section LUB_GLB.

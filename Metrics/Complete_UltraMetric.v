@@ -7,6 +7,9 @@ all cauchy sequences have a limit.
 Record Complete_UltraMetric (L : CompleteLattice) : Type :=
   {
     CUM_UM :> UltraMetric L;
-    CMU_complete :
+    CUM_complete :
       ∀ (chs : Cauchy_Sequence CUM_UM), Limit chs
   }.
+
+Arguments CUM_UM {_} _.
+Arguments CUM_complete {_} _ _.

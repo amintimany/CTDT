@@ -16,7 +16,7 @@ Record UltraMetric (L : CompleteLattice) : Type :=
       ∀ x y, x = y → (∂(x, y) = ⊥);
     UM_zero_dist_eq :
       ∀ x y, (∂(x, y) = ⊥) → x = y;
-    UM_ineq : ∀ x z y, ∂(x, z) = ∂(x, y) ⊔ ∂(y, z)
+    UM_ineq : ∀ x z y, (∂(x, z) ⊑ (∂(x, y) ⊔ ∂(y, z))%lattice)%order
   }.
 
 Arguments UM_Carrier {_} _ : assert.

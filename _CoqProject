@@ -1,5 +1,7 @@
 Essentials/Notations.v
 Essentials/Definitions.v
+Essentials/Facts_Tactics.v
+Essentials/Arith.v
 Lattice/PartialOrder.v
 Lattice/CompleteLattice.v
 Metrics/UltraMetric.v

@@ -21,3 +21,10 @@ Fixpoint iterate {A : Type} (f : A → A) (x : A) (n : nat) : A :=
   | O => x
   | S n' => f (iterate f x n')
   end.
+
+Theorem iterate_Sn_n {A : Type} (f : A → A) (x : A) (n : nat) :
+  iterate f x (S n) = iterate f (f x) n.
+Proof.
+  induction n; cbn; try rewrite <- IHn; trivial.
+Qed.
+  
