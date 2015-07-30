@@ -9,17 +9,17 @@ partial order relation with arbitrary joins always has a unique bottom element �
 the join of the empty set. *)
 Record MLattice : Type :=
   {
-    CL_PO :> PartialOrder;
-    CL_meets : ∀ (P : CL_PO → Prop), ⊔ᵍ P;
-    CL_top : CL_PO;
-    CL_top_top : ∀ (x : CL_PO), x ⊑ CL_top;
-    CL_bot : CL_PO;
-    CL_bot_bottom : ∀ (x : CL_PO), CL_bot ⊑ x;
+    ML_PO :> PartialOrder;
+    ML_meets : ∀ (P : ML_PO → Prop), ⊔ᵍ P;
+    ML_top : ML_PO;
+    ML_top_top : ∀ (x : ML_PO), x ⊑ ML_top;
+    ML_bot : ML_PO;
+    ML_bot_bottom : ∀ (x : ML_PO), ML_bot ⊑ x;
     (** This is a usual property of real numbers used in the context of metric spaces in
 e.g., proof of uniqueness of limits. We require it to be proven for an M-lattice as we
 can't prove it constructively in general. Note that its contrapositive is easily provable for
 any partial order relation with a bottom element! *)
-    CL_strict_bot : ∀ x, (∀ y, CL_bot ⊏ y → x ⊏ y) → x = CL_bot;
+    ML_strict_bot : ∀ x, (∀ y, ML_bot ⊏ y → x ⊏ y) → x = ML_bot;
     (** This is a dichotomy about the bottom element of a lattice. It states that the 
 bottom element is either not reachable from a non-bottom element (there is always an
 element strictly between them) or there is an element (not necessarily unique) in the
@@ -28,34 +28,34 @@ lattice that sits immediately (and strictly) above the bottom element.
 We require this as part of the definition of an M-lattice as we can't distinguish
 these two cases and we need this distinction to keep proofs (e.g., uniqueness of limits)
 constructive. *)
-    CL_bottom_dichotomy :
-      (∀ x, CL_bot ⊏ x → {y : CL_PO | CL_bot ⊏ y ∧ y ⊏ x})
+    ML_bottom_dichotomy :
+      (∀ x, ML_bot ⊏ x → {y : ML_PO | ML_bot ⊏ y ∧ y ⊏ x})
       +
-      {ab : CL_PO | CL_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = CL_bot)}
+      {ab : ML_PO | ML_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = ML_bot)}
   }.
 
-Arguments CL_PO _ : assert.
-Arguments CL_meets {_} _, _ _.
-Arguments CL_top {_}.
-Arguments CL_bot {_}.
+Arguments ML_PO _ : assert.
+Arguments ML_meets {_} _, _ _.
+Arguments ML_top {_}.
+Arguments ML_bot {_}.
 
-Notation "⊤" := CL_top : lattice_scope.
-Notation "⊥" := CL_bot : lattice_scope.
+Notation "⊤" := ML_top : lattice_scope.
+Notation "⊥" := ML_bot : lattice_scope.
 
 Definition Lat_LUB {Lat : MLattice} (P : Lat → Prop) : ⊔ᵍ P :=
-  (CL_meets Lat P).
+  (ML_meets Lat P).
 
 Definition Lat_LUB_Pair {Lat : MLattice} (x y : Lat) : x ⊔ y :=
-  (CL_meets Lat (Couple _ x y)).
+  (ML_meets Lat (Couple _ x y)).
 
 
 Notation "⊔ᵍ Q" := (Lat_LUB Q) : lattice_scope.
 
 Notation "x ⊔ y" := (Lat_LUB_Pair x y) : lattice_scope.
 
-Hint Resolve CL_bot_bottom.
+Hint Resolve ML_bot_bottom.
 
-Hint Resolve CL_top_top.
+Hint Resolve ML_top_top.
 
 Local Open Scope lattice_scope.
 

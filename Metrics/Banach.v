@@ -50,10 +50,10 @@ Section Banach.
   Theorem Banach_unique : ∀ l l', is_FixedPoint f l → is_FixedPoint f l' → l = l'.
   Proof.
     intros l l' H1 H2.
-    destruct (CL_bottom_dichotomy L) as [dicht|dicht].
+    destruct (ML_bottom_dichotomy L) as [dicht|dicht].
     {
       apply UM_zero_dist_eq.
-      apply CL_strict_bot.
+      apply ML_strict_bot.
       intros y H3.
       destruct (dicht _ H3) as [z [Hd1 Hd2]].
       destruct (CR_rate_indicator (ρ f)%metric z (∂( l, l')) Hd1) as [n H4].

@@ -42,7 +42,7 @@ distance from each other.
     (∀ (ε : L), ⊥ ⊏ ε → ∃ N, ∀ n m, N <= n → N ≤ m → (∂(seq n, seq m)) ⊏ ε).
   Proof.
     intros H ε Hε.
-    destruct (CL_bottom_dichotomy L) as [dicht|dicht].
+    destruct (ML_bottom_dichotomy L) as [dicht|dicht].
     {
       destruct (dicht _ Hε) as [y [Hd1 Hd2]].
       destruct (H _ Hd1) as [N HN].

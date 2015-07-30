@@ -25,10 +25,10 @@ decreases below any positive distance as the sequence progresses. *)
 
   Theorem Limit_unique (l l' : Limit) : l = l' :> U.
   Proof.
-    destruct (CL_bottom_dichotomy L) as [dicht|dicht].
+    destruct (ML_bottom_dichotomy L) as [dicht|dicht].
     {
       apply UM_zero_dist_eq.
-      apply CL_strict_bot.
+      apply ML_strict_bot.
       intros y H.
       specialize (dicht _ H).
       destruct dicht as [y' [Hd1 Hd2]].
