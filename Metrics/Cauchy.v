@@ -1,11 +1,10 @@
 Require Import Coq.Arith.Compare_dec.
 Require Import Essentials.Notations.
-Require Import Lattice.CompleteLattice.
 Require Import Metrics.UltraMetric.
 Require Import Coq.omega.Omega.
 
 Section Cauchy_Sequence.
-  Context {L : CompleteLattice} (U : UltraMetric L).
+  Context {L : MLattice} (U : UltraMetric L).
 
   Local Open Scope order_scope.
   Local Open Scope lattice_scope.

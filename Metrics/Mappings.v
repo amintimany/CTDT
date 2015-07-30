@@ -8,7 +8,7 @@ Local Open Scope order_scope.
 Local Open Scope lattice_scope.
 
 Section Mappings.
-  Context {L : CompleteLattice} (U U' : UltraMetric L).
+  Context {L : MLattice} (U U' : UltraMetric L).
 
   Local Hint Extern 1 => progress cbn in *.
   
@@ -98,7 +98,7 @@ Arguments CN_contractive {_ _ _} _ _ _.
 Notation "'ρ' f" := (CN_ContrRate f) : metric_scope.
 
 Section NonExp_compose_and_id.
-  Context {L : CompleteLattice}.
+  Context {L : MLattice}.
 
   Local Obligation Tactic := auto.
   
@@ -168,7 +168,7 @@ Section NonExp_compose_and_id.
 End NonExp_compose_and_id.
     
 Section Contr_Comp.
-  Context {L : CompleteLattice}
+  Context {L : MLattice}
           {U U' U'' : UltraMetric L}
   .
         
@@ -218,7 +218,7 @@ End Contr_Comp.
 
 (** Every contractive function is continuous. *)
 Section Contractive_Continuous.
-  Context {L : CompleteLattice}
+  Context {L : MLattice}
           {U : UltraMetric L}
           (Seq : Sequence U)
           (lm : Limit Seq)
@@ -246,7 +246,7 @@ End Contractive_Continuous.
 
 (** Every non-expansive function is continuous. *)
 Section NonExpansive_Continuous.
-  Context {L : CompleteLattice}
+  Context {L : MLattice}
           {U : UltraMetric L}
           (Seq : Sequence U)
           (lm : Limit Seq)
@@ -273,7 +273,7 @@ End NonExpansive_Continuous.
 
 (** Iterating a contractive function contracts the distance at least according to iterated ρ (ContrRate). *)
 Section iterate_Contractive_LE.
-  Context {L : CompleteLattice}
+  Context {L : MLattice}
           {U : UltraMetric L}
           (f : Contractive U U)
           (x y : U)
@@ -291,7 +291,7 @@ End iterate_Contractive_LE.
 
 (** Iterating a contraction rate contracts more the more it is applied. *)
 Section iterate_ContrRate_LE.
-  Context {L : CompleteLattice}
+  Context {L : MLattice}
           (f : ContrRate L)
           (x : L)
   .

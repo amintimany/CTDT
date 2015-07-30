@@ -1,11 +1,10 @@
 Require Import Essentials.Notations.
 Require Import Essentials.Arith.
 Require Import Metrics.UltraMetric.
-Require Import Lattice.CompleteLattice.
 
 (** Limit of a sequence in an ultra metric space. *)
 Section Limit.
-  Context {L : CompleteLattice} {U : UltraMetric L} (Seq : Sequence U).
+  Context {L : MLattice} {U : UltraMetric L} (Seq : Sequence U).
 
   Local Open Scope order_scope.
   Local Open Scope lattice_scope.
