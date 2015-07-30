@@ -44,7 +44,7 @@ A mechanism to indicate contraction rate of a contractive mapping.
       CR_non_expansive : ∀ x, CR_fun x ⊑ x;
       CR_contracts : ∀ x, ⊥ ⊏ x → CR_fun x ⊏ x;
       CR_rate_indicator :
-        ∀ (ε ε' : L), ⊥ ⊏ ε → ∃ n, (iterate CR_fun ε' n) ⊑ ε
+        ∀ (ε ε' : L), ⊥ ⊏ ε → ∃ n, (iterate CR_fun ε' n) ⊏ ε
     }.
 
   (** Two contraction rates are equal if their underlying maps are. *)

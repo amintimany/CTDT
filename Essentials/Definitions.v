@@ -27,4 +27,15 @@ Theorem iterate_Sn_n {A : Type} (f : A → A) (x : A) (n : nat) :
 Proof.
   induction n; cbn; try rewrite <- IHn; trivial.
 Qed.
-  
+
+
+Theorem is_FixedPoint_iterate
+        {A : Type} (f : A → A) (x : A)
+  : is_FixedPoint f x → ∀ n, is_FixedPoint (fun u => iterate f u n) x.
+Proof.
+  intros H n.
+  induction n.
+  reflexivity.
+  unfold is_FixedPoint in *; cbn in*.
+  rewrite IHn; trivial.
+Qed.

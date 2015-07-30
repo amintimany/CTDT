@@ -1,15 +1,18 @@
 Require Import Essentials.Notations.
 Require Import Essentials.Arith.
 Require Import Metrics.UltraMetric.
+Require Import Coq.omega.Omega.
+
+Local Open Scope order_scope.
+Local Open Scope lattice_scope.
+Local Open Scope metric_scope.
 
 (** Limit of a sequence in an ultra metric space. *)
 Section Limit.
   Context {L : MLattice} {U : UltraMetric L} (Seq : Sequence U).
 
-  Local Open Scope order_scope.
-  Local Open Scope lattice_scope.
-  Local Open Scope metric_scope.
-  
+  (** The limit of a sequence is an element whose distance from elements of the sequence
+decreases below any positive distance as the sequence progresses. *)
   Record Limit : Type :=
     {
       Lim :> U;
@@ -20,7 +23,6 @@ Section Limit.
               ∂(Seq n, Lim) ⊏ ε
     }.
 
-  
   Theorem Limit_unique (l l' : Limit) : l = l' :> U.
   Proof.
     destruct (CL_bottom_dichotomy L) as [dicht|dicht].
@@ -57,10 +59,37 @@ Section Limit.
       + specialize (Hl' (max Nl Nl') (r_le_max _ _)).
         apply Hd2 in Hl'; rewrite Hl'; trivial.
     }
-  Qed.        
+  Qed.
      
 End Limit.
 
 Arguments Lim {_ _ _} _.
 Arguments Lim_limit {_ _ _} _ _ _.
 
+Section Limit_of_SubSeq.
+  Context {L : MLattice} {U : UltraMetric L} (Seq : Sequence U).
+
+  Theorem Limit_of_SubSeq (l : Limit Seq) (l' : Limit (fun n => Seq (S n))) : l = l' :> U.
+  Proof.
+    cut (∀ (ε : L),
+            ⊥ ⊏ ε →
+            ∃ (N : nat), ∀ (n : nat),
+                N ≤ n →
+                ∂(Seq n, l') ⊏ ε
+        ).
+    {
+      intros H.
+      transitivity ({|Lim := l'; Lim_limit := H|}); trivial.
+      apply Limit_unique.
+    }
+    {    
+      intros.
+      destruct (Lim_limit l' ε H) as [m H'].
+      exists (S m).
+      intros n H1.
+      destruct n; [omega|].
+      cut (m ≤ n); auto; omega.
+    }
+  Qed.      
+      
+End Limit_of_SubSeq.

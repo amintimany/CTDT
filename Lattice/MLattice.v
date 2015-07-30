@@ -3,14 +3,14 @@ Require Import Coq.Sets.Ensembles.
 
 Local Open Scope order_scope.
 
-(** An M-lattice (measure lattice) is partial order relation that has all joins (LUBs) and a top element.
-We require the user to provide the bottom element also explicitly. In any partial order relation with
-arbitrary joins always has a unique bottom element – namely, the join of the empty set. *)
+(** An M-lattice (measure lattice) is partial order relation that has all joins (LUBs) and
+a top element. We require the user to provide the bottom element also explicitly. In any
+partial order relation with arbitrary joins always has a unique bottom element – namely,
+the join of the empty set. *)
 Record MLattice : Type :=
   {
     CL_PO :> PartialOrder;
     CL_meets : ∀ (P : CL_PO → Prop), ⊔ᵍ P;
-    CL_joins : ∀ (P : CL_PO → Prop), ⊓ᵍ P;
     CL_top : CL_PO;
     CL_top_top : ∀ (x : CL_PO), x ⊑ CL_top;
     CL_bot : CL_PO;
@@ -36,7 +36,6 @@ constructive. *)
 
 Arguments CL_PO _ : assert.
 Arguments CL_meets {_} _, _ _.
-Arguments CL_joins {_} _, _ _.
 Arguments CL_top {_}.
 Arguments CL_bot {_}.
 
@@ -46,22 +45,13 @@ Notation "⊥" := CL_bot : lattice_scope.
 Definition Lat_LUB {Lat : MLattice} (P : Lat → Prop) : ⊔ᵍ P :=
   (CL_meets Lat P).
 
-Definition Lat_GLB {Lat : MLattice} (P : Lat → Prop) : ⊓ᵍ P :=
-  (CL_joins Lat P).
-
 Definition Lat_LUB_Pair {Lat : MLattice} (x y : Lat) : x ⊔ y :=
   (CL_meets Lat (Couple _ x y)).
 
-Definition Lat_GLB_Pair {Lat : MLattice} (x y : Lat) : x ⊓ y :=
-  (CL_joins Lat (Couple _ x y)).
 
 Notation "⊔ᵍ Q" := (Lat_LUB Q) : lattice_scope.
 
-Notation "⊓ᵍ Q" := (Lat_GLB Q) : lattice_scope.
-
 Notation "x ⊔ y" := (Lat_LUB_Pair x y) : lattice_scope.
-  
-Notation "x ⊓ y" := (Lat_GLB_Pair x y) : lattice_scope.
 
 Hint Resolve CL_bot_bottom.
 
@@ -85,4 +75,16 @@ Theorem LE_Bottom_Bottom {Lat : MLattice} (b : Lat) : b ⊑ ⊥ → b = ⊥.
 Proof.
   intros H.
   apply PO_ASym; auto.
+Qed.
+
+Theorem lub_sym {L : MLattice} (a b : L) : (a ⊔ b) = (b ⊔ a) :> L.
+Proof.
+  apply PO_ASym; apply lub_lst; intros ? H; destruct H; apply lub_ub; constructor.
+Qed.
+
+Theorem lub_bot {L : MLattice} (b : L) : (b ⊔ ⊥) = b :> L.
+Proof.
+  apply PO_ASym.
+  apply lub_lst; intros ? H; destruct H; trivial.
+  apply lub_ub; constructor.
 Qed.

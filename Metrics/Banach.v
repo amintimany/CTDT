@@ -5,7 +5,7 @@ Require Import Metrics.UltraMetric Metrics.Cauchy Metrics.Mappings
 .
 
 Section Banach.
-  Context {L : CompleteLattice}
+  Context {L : MLattice}
           (CU : Complete_UltraMetric L)
           (x : CU)
           (f : Contractive CU CU).
@@ -19,14 +19,14 @@ Section Banach.
 
   Next Obligation.
   Proof.
+    apply Cauchy_condition_simpl; trivial.
     intros ε H1.
     destruct (CR_rate_indicator (CN_ContrRate f) ε (∂(x, f x))%metric H1) as [N H2].
     exists N.
-    apply Cauchy_condition_simpl.
     intros n H3.
     rewrite iterate_Sn_n.
-    eapply PO_Trans; [apply iterate_Contractive_LE|].
-    eapply PO_Trans; [|apply H2].
+    eapply LE_LT_Trans; [apply iterate_Contractive_LE|].
+    eapply LE_LT_Trans; [|apply H2].
     apply iterate_ContrRate_LE; trivial.
   Qed.
 
@@ -37,6 +37,41 @@ Section Banach.
       [|- ?A = ?B] =>
       change A with (Lim (Contractive_Continuous _ (CUM_complete _ iterate_f_cauchy) f))
     end.
-    Set Printing All.
-    idtac.
-    
+    change (fun n : nat => f (CHS_seq _ iterate_f_cauchy n))
+    with (fun n : nat => (CHS_seq _ iterate_f_cauchy (S n))).
+    symmetry.
+    apply Limit_of_SubSeq.
+  Qed.
+
+  Local Open Scope order_scope.
+  Local Open Scope metric_scope.
+  Local Open Scope lattice_scope.
+
+  Theorem Banach_unique : ∀ l l', is_FixedPoint f l → is_FixedPoint f l' → l = l'.
+  Proof.
+    intros l l' H1 H2.
+    destruct (CL_bottom_dichotomy L) as [dicht|dicht].
+    {
+      apply UM_zero_dist_eq.
+      apply CL_strict_bot.
+      intros y H3.
+      destruct (dicht _ H3) as [z [Hd1 Hd2]].
+      destruct (CR_rate_indicator (ρ f)%metric z (∂( l, l')) Hd1) as [n H4].
+      rewrite <- (is_FixedPoint_iterate _ _ H1 n).
+      rewrite <- (is_FixedPoint_iterate _ _ H2 n).
+      eapply LE_LT_Trans; [apply iterate_Contractive_LE|].
+      eapply LE_LT_Trans; [apply H4|].
+      trivial.
+    }
+    {
+      destruct dicht as [ab [Hd1 Hd2]].
+      destruct (CR_rate_indicator (ρ f)%metric ab (∂( l, l')) Hd1) as [n H4].
+      apply UM_zero_dist_eq.
+      apply Hd2.
+      rewrite <- (is_FixedPoint_iterate _ _ H1 n).
+      rewrite <- (is_FixedPoint_iterate _ _ H2 n).
+      eapply LE_LT_Trans; [apply iterate_Contractive_LE|trivial].
+    }
+  Qed.
+
+End Banach.
