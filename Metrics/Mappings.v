@@ -44,7 +44,7 @@ A mechanism to indicate contraction rate of a contractive mapping.
       CR_non_expansive : ∀ x, CR_fun x ⊑ x;
       CR_contracts : ∀ x, ⊥ ⊏ x → CR_fun x ⊏ x;
       CR_rate_indicator :
-        ∀ (ε ε' : L), ⊥ ⊏ ε → ∃ n, (iterate CR_fun ε' n) ⊏ ε
+        ∀ (ε ε' : (ApprType L)), ∃ n, (iterate CR_fun (proj1_sig ε') n) ⊏ (proj1_sig ε)
     }.
 
   (** Two contraction rates are equal if their underlying maps are. *)
@@ -90,7 +90,7 @@ Arguments CR_fun {_} _ _.
 Arguments CR_monotone {_} _ _ _ _.
 Arguments CR_non_expansive {_} _ _.
 Arguments CR_contracts {_} _ _ _.
-Arguments CR_rate_indicator {_} _ _ _ _.
+Arguments CR_rate_indicator {_} _ _ _.
 Arguments CN_fun {_ _ _} _ _.
 Arguments CN_ContrRate {_ _ _} _.
 Arguments CN_contractive {_ _ _} _ _ _.
@@ -233,8 +233,8 @@ Section Contractive_Continuous.
 
   Next Obligation.
   Proof.
-    intros ε H1.
-    destruct (Lim_limit lm ε H1) as [N H2].
+    intros ε.
+    destruct (Lim_limit lm ε) as [N H2].
     exists N.
     intros n H3.
     eapply LE_LT_Trans; [apply CN_contractive|].
@@ -261,8 +261,8 @@ Section NonExpansive_Continuous.
 
   Next Obligation.
   Proof.
-    intros ε H1.
-    destruct (Lim_limit lm ε H1) as [N H2].
+    intros ε.
+    destruct (Lim_limit lm ε) as [N H2].
     exists N.
     intros n H3.
     eapply LE_LT_Trans; [apply NE_non_expansive|].

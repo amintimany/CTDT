@@ -28,6 +28,15 @@ Proof.
   induction n; cbn; try rewrite <- IHn; trivial.
 Qed.
 
+Theorem iterate_after_iterate {A : Type} (f : A → A) (x : A) (n m : nat) :
+  iterate f (iterate f x n) m = iterate f x (n + m).
+Proof.
+  induction n; trivial; cbn.
+  rewrite <- iterate_Sn_n.
+  cbn.
+  apply f_equal.
+  trivial.
+Qed.
 
 Theorem is_FixedPoint_iterate
         {A : Type} (f : A → A) (x : A)

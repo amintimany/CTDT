@@ -15,11 +15,20 @@ Record MLattice : Type :=
     ML_top_top : ∀ (x : ML_PO), x ⊑ ML_top;
     ML_bot : ML_PO;
     ML_bot_bottom : ∀ (x : ML_PO), ML_bot ⊑ x;
-    (** This is a usual property of real numbers used in the context of metric spaces in
+(*    (** This is a usual property of real numbers used in the context of metric spaces in
 e.g., proof of uniqueness of limits. We require it to be proven for an M-lattice as we
 can't prove it constructively in general. Note that its contrapositive is easily provable for
 any partial order relation with a bottom element! *)
-    ML_strict_bot : ∀ x, (∀ y, ML_bot ⊏ y → x ⊏ y) → x = ML_bot;
+    ML_strict_bot : ∀ x, (∀ y, ML_bot ⊏ y → x ⊏ y) → x = ML_bot; *)
+    (** The subset of distances for which we have to provide constructive approximatons
+for limits and such. *)
+    ML_appr_cond : ML_PO → Prop;
+    (** The top element must be in the approximation subset. *)
+    ML_appr_top : ML_appr_cond ML_top;
+    (** The approximation subset must be all positive. *)
+    ML_appr_pos : ∀ x, ML_appr_cond x → ML_bot ⊏ x;
+    (** The approximation subset dominate all positive values. *)
+    ML_appr_dominate_pos : (∀ x, (∀ y, ML_appr_cond y → x ⊏ y) → x = ML_bot);
     (** This is a dichotomy about the bottom element of a lattice. It states that the 
 bottom element is either not reachable from a non-bottom element (there is always an
 element strictly between them) or there is an element (not necessarily unique) in the
@@ -29,15 +38,17 @@ We require this as part of the definition of an M-lattice as we can't distinguis
 these two cases and we need this distinction to keep proofs (e.g., uniqueness of limits)
 constructive. *)
     ML_bottom_dichotomy :
-      (∀ x, ML_bot ⊏ x → ∃ y, ML_bot ⊏ y ∧ y ⊏ x)
-      ∨
-      (∃ ab, ML_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = ML_bot))
+      (∀ x, ML_appr_cond x → {y : ML_PO | ML_appr_cond y ∧ ML_bot ⊏ y ∧ y ⊏ x})
+      +
+      {ab : ML_PO | ML_appr_cond ab ∧ ML_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = ML_bot)}
   }.
 
 Arguments ML_PO _ : assert.
 Arguments ML_meets {_} _, _ _.
 Arguments ML_top {_}.
 Arguments ML_bot {_}.
+
+Definition ApprType (M : MLattice) := {x : M| ML_appr_cond M x}.
 
 Notation "⊤" := ML_top : lattice_scope.
 Notation "⊥" := ML_bot : lattice_scope.
