@@ -29,9 +29,9 @@ We require this as part of the definition of an M-lattice as we can't distinguis
 these two cases and we need this distinction to keep proofs (e.g., uniqueness of limits)
 constructive. *)
     ML_bottom_dichotomy :
-      (∀ x, ML_bot ⊏ x → {y : ML_PO | ML_bot ⊏ y ∧ y ⊏ x})
-      +
-      {ab : ML_PO | ML_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = ML_bot)}
+      (∀ x, ML_bot ⊏ x → ∃ y, ML_bot ⊏ y ∧ y ⊏ x)
+      ∨
+      (∃ ab, ML_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = ML_bot))
   }.
 
 Arguments ML_PO _ : assert.
