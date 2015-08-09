@@ -10,6 +10,8 @@ Metrics/Cauchy.v
 Metrics/Limit.v
 Metrics/Complete_UltraMetric.v
 Metrics/Banach.v
+Metrics/CBULt/CBULt.v
+Metrics/CBULt/GenProd.v
 Bisected/Bisected.v
 
 -R . CTDT

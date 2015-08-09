@@ -26,3 +26,5 @@ Notation "∂( x , y )" := (UM_distance x y) : metric_scope.
 
 (** A sequence is a function from natural numbers to the metric space. *)
 Definition Sequence {L : MLattice} (U : UltraMetric L) := nat → U.
+
+Identity Coercion Sq : Sequence >-> Funclass.

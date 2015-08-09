@@ -10,7 +10,7 @@ the join of the empty set. *)
 Record MLattice : Type :=
   {
     ML_PO :> PartialOrder;
-    ML_meets : ∀ (P : ML_PO → Prop), ⊔ᵍ P;
+    ML_meets : ∀ (X : Type) (f : X → ML_PO), ⊔ᵍ f;
     ML_top : ML_PO;
     ML_top_top : ∀ (x : ML_PO), x ⊑ ML_top;
     ML_bot : ML_PO;
@@ -22,7 +22,7 @@ any partial order relation with a bottom element! *)
     ML_strict_bot : ∀ x, (∀ y, ML_bot ⊏ y → x ⊏ y) → x = ML_bot; *)
     (** The subset of distances for which we have to provide constructive approximatons
 for limits and such. *)
-    ML_appr_cond : ML_PO → Prop;
+    ML_appr_cond : ML_PO → Type;
     (** The top element must be in the approximation subset. *)
     ML_appr_top : ML_appr_cond ML_top;
     (** The approximation subset must be all positive. *)
@@ -38,27 +38,26 @@ We require this as part of the definition of an M-lattice as we can't distinguis
 these two cases and we need this distinction to keep proofs (e.g., uniqueness of limits)
 constructive. *)
     ML_bottom_dichotomy :
-      (∀ x, ML_appr_cond x → {y : ML_PO | ML_appr_cond y ∧ ML_bot ⊏ y ∧ y ⊏ x})
+      (∀ x, ML_appr_cond x → {y : ML_PO & ML_appr_cond y & ML_bot ⊏ y ∧ y ⊏ x})
       +
-      {ab : ML_PO | ML_appr_cond ab ∧ ML_bot ⊏ ab ∧ (∀ x, x ⊏ ab → x = ML_bot)}
+      {ab : ML_PO & ML_appr_cond ab & (∀ x, x ⊏ ab → x = ML_bot)}
   }.
 
 Arguments ML_PO _ : assert.
-Arguments ML_meets {_} _, _ _.
+Arguments ML_meets {_ _} _, _ {_} _.
 Arguments ML_top {_}.
 Arguments ML_bot {_}.
 
-Definition ApprType (M : MLattice) := {x : M| ML_appr_cond M x}.
+Definition ApprType (M : MLattice) := {x : M & ML_appr_cond M x}.
 
 Notation "⊤" := ML_top : lattice_scope.
 Notation "⊥" := ML_bot : lattice_scope.
 
-Definition Lat_LUB {Lat : MLattice} (P : Lat → Prop) : ⊔ᵍ P :=
-  (ML_meets Lat P).
+Definition Lat_LUB {Lat : MLattice} {X : Type} (f : X → Lat) : ⊔ᵍ f :=
+  (ML_meets Lat f).
 
 Definition Lat_LUB_Pair {Lat : MLattice} (x y : Lat) : x ⊔ y :=
-  (ML_meets Lat (Couple _ x y)).
-
+  (ML_meets Lat (fun u : bool => if u then x else y)).
 
 Notation "⊔ᵍ Q" := (Lat_LUB Q) : lattice_scope.
 
@@ -90,12 +89,14 @@ Qed.
 
 Theorem lub_sym {L : MLattice} (a b : L) : (a ⊔ b) = (b ⊔ a) :> L.
 Proof.
-  apply PO_ASym; apply lub_lst; intros ? H; destruct H; apply lub_ub; constructor.
+  apply PO_ASym; apply lub_lst; intros [|];
+  apply (lub_ub (fun u : bool => if u then _ else _) _ false) +
+  apply (lub_ub (fun u : bool => if u then _ else _) _ true).
 Qed.
 
 Theorem lub_bot {L : MLattice} (b : L) : (b ⊔ ⊥) = b :> L.
 Proof.
   apply PO_ASym.
-  apply lub_lst; intros ? H; destruct H; trivial.
-  apply lub_ub; constructor.
+  apply lub_lst; intros [|]; trivial.
+  apply (lub_ub (fun u : bool => if u then _ else _) _ true).
 Qed.

@@ -286,9 +286,9 @@ Proof.
 Qed.
 
 (** The least upper bound. *)
-Program Definition BD_lub (f : BiDist → Prop) : BiDist :=
+Program Definition BD_lub {X : Type} (f : X → BiDist) : BiDist :=
   {|
-    BD_agree := fun n => ∀ x, f x → x n
+    BD_agree := fun n => ∀ x, f x n
   |}
 .
 
@@ -302,17 +302,17 @@ Qed.
 Notation "⊔ᵍ y" := (BD_lub y) : bisected_scope.
 
 (** The least upper bound is an upper bound. *)
-Theorem BD_lub_ub : ∀ (f : BiDist → Prop),
-    ∀ x, f x → x ⊑ ⊔ᵍ f.
+Theorem BD_lub_ub : ∀ {X : Type} (f : X → BiDist),
+    ∀ x, f x ⊑ ⊔ᵍ f.
 Proof.
   intros f d d' n; cbn; intuition.  
 Qed.
 
 (** The lease upper bound is indeed the least among upper bounds. *)
-Theorem BD_lub_lst : ∀ (f : BiDist → Prop) (d : BiDist),
-    (∀ x, f x → x ⊑ d) → (⊔ᵍ f) ⊑ d.
+Theorem BD_lub_lst : ∀ {X : Type} (f : X → BiDist) (d : BiDist),
+    (∀ x, f x ⊑ d) → (⊔ᵍ f) ⊑ d.
 Proof.
-  intros f d H1 n H2 x H3; cbn; apply H1; trivial.
+  intros X f d H1 n H2 x; apply H1; trivial.
 Qed.
 
 (** BiDist forms a partial order. *)
@@ -326,14 +326,14 @@ Definition BiDistPO : PartialOrder :=
   |}.
 
 (** BiDist as a partial order has least upper bounds. *)
-Program Definition BD_LUB (f : BiDist → Prop) : (@LUB BiDistPO f)%order :=
+Program Definition BD_LUB {X : Type} (f : X → BiDist) : (@LUB BiDistPO _ f)%order :=
   {|
     lub := ⊔ᵍ f;
     lub_ub := BD_lub_ub f;
     lub_lst := BD_lub_lst f
   |}.
 
-Inductive BD_ApprType : BiDist → Prop :=
+Inductive BD_ApprType : BiDist → Type :=
 | Appr_Half_Pow : ∀ n, BD_ApprType (BD_Half_pow n)
 .
 
@@ -346,7 +346,7 @@ Definition BD_appr_pos := fun (x : BiDistPO) (H : BD_ApprType x) =>
 Program Definition BiDistML : MLattice :=
   {|
     ML_PO := BiDistPO;
-    ML_meets := BD_LUB;
+    ML_meets := @BD_LUB;
     ML_top := ⊤;
     ML_top_top := BD_LE_top;
     ML_bot := (⊥);
@@ -359,14 +359,17 @@ Program Definition BiDistML : MLattice :=
       inl
         (
           fun (x : BiDistPO) (H : BD_ApprType x) =>
-            exist (fun y : BiDistPO => BD_ApprType y ∧ (⊥ ⊏ y) ∧ (y ⊏ x)%order)
-                  (BD_Half_of x)
-                  (conj
-                     match H in (BD_ApprType b) return (BD_ApprType (BD_Half_of b)) with
-                     | Appr_Half_Pow n => Appr_Half_Pow (S n)
-                     end
-                     (conj (BD_pos_half_pos x (BD_appr_pos x H))
-                           (BD_pos_half_strictly_less x (BD_appr_pos x H))))
+            existT2
+              (fun y : BiDistPO => BD_ApprType y)
+              (fun y : BiDistPO => (⊥ ⊏ y) ∧ (y ⊏ x)%order)
+              (BD_Half_of x)
+              (
+                match H in (BD_ApprType b) return (BD_ApprType (BD_Half_of b)) with
+                | Appr_Half_Pow n => Appr_Half_Pow (S n)
+                end
+              )
+              (conj (BD_pos_half_pos x (BD_appr_pos x H))
+                    (BD_pos_half_strictly_less x (BD_appr_pos x H)))
         )
   |}.
 

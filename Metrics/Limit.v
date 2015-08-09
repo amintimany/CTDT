@@ -18,8 +18,8 @@ decreases below any positive distance as the sequence progresses. *)
       Lim :> U;
       Lim_limit :
         ∀ (ε : (ApprType L)),
-          ∃ (N : nat), ∀ (n : nat), N ≤ n →
-              ∂(Seq n, Lim) ⊏ (proj1_sig ε)
+          {N : nat | ∀ (n : nat), N ≤ n →
+              ∂(Seq n, Lim) ⊏ (projT1 ε)}
     }.
 
   Theorem Limit_unique (l l' : Limit) : l = l' :> U.
@@ -29,13 +29,12 @@ decreases below any positive distance as the sequence progresses. *)
       apply UM_zero_dist_eq.
       apply ML_appr_dominate_pos.
       intros y H1.
-      destruct (dicht _ H1) as [y' [Hd1 [Hd2 Hd3]]].
-      destruct (Lim_limit l (exist _ _ Hd1)) as [Nl Hl].
-      destruct (Lim_limit l' (exist _ _ Hd1)) as [Nl' Hl'].
+      destruct (dicht _ H1) as [y' Hd1 [Hd2 Hd3]].
+      destruct (Lim_limit l (existT _ _ Hd1)) as [Nl Hl].
+      destruct (Lim_limit l' (existT _ _ Hd1)) as [Nl' Hl'].
       eapply LE_LT_Trans; [apply (UM_ineq L U l l' (Seq (max Nl Nl'))) |].
       eapply LE_LT_Trans; [|apply Hd3].
-      apply lub_lst; intros x Hx.
-      destruct Hx.
+      apply lub_lst; intros [|].
       + rewrite UM_dist_sym.
         apply Hl.
         apply l_le_max.
@@ -43,19 +42,18 @@ decreases below any positive distance as the sequence progresses. *)
         apply r_le_max.
     }
     {
-      destruct dicht as [ab [Hd1 [Hd2 Hd3]]].
-      destruct (Lim_limit l (exist _ _ Hd1)) as [Nl Hl].
-      destruct (Lim_limit l' (exist _ _ Hd1)) as [Nl' Hl'].
+      destruct dicht as [ab Hd1 Hd2].
+      destruct (Lim_limit l (existT _ _ Hd1)) as [Nl Hl].
+      destruct (Lim_limit l' (existT _ _ Hd1)) as [Nl' Hl'].
       apply UM_zero_dist_eq.
       apply LE_Bottom_Bottom.
       eapply PO_Trans; [apply (UM_ineq L U l l' (Seq (max Nl Nl'))) |].
-      apply lub_lst; intros x Hx.
-      destruct Hx.
+      apply lub_lst; intros [|].
       + rewrite UM_dist_sym.
         specialize (Hl (max Nl Nl') (l_le_max _ _)).
-        apply Hd3 in Hl; rewrite Hl; trivial.
+        apply Hd2 in Hl; rewrite Hl; trivial.
       + specialize (Hl' (max Nl Nl') (r_le_max _ _)).
-        apply Hd3 in Hl'; rewrite Hl'; trivial.
+        apply Hd2 in Hl'; rewrite Hl'; trivial.
     }
   Qed.
      
@@ -70,9 +68,9 @@ Section Limit_of_SubSeq.
   Theorem Limit_of_SubSeq (l : Limit Seq) (l' : Limit (fun n => Seq (S n))) : l = l' :> U.
   Proof.
     cut (∀ (ε : (ApprType L)),
-            ∃ (N : nat), ∀ (n : nat),
+            {N : nat | ∀ (n : nat),
                 N ≤ n →
-                ∂(Seq n, l') ⊏ (proj1_sig ε)
+                ∂(Seq n, l') ⊏ (projT1 ε)}
         ).
     {
       intros H.

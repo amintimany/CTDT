@@ -66,21 +66,21 @@ Section LUB_GLB.
   Context {A : PartialOrder}.
 
   Section Generalized.
-    Context (P : A → Prop).
+    Context {X : Type} (f : X → A).
     
     Record LUB :=
       {
         lub :> A;
-        lub_ub : ∀ (x : A), P x → x ⊑ lub;
-        lub_lst : ∀ (ub : A), (∀ (x : A), P x → x ⊑ ub) → lub ⊑ ub
+        lub_ub : ∀ (x : X), (f x) ⊑ lub;
+        lub_lst : ∀ (ub : A), (∀ (x : X), (f x) ⊑ ub) → lub ⊑ ub
       }
     .
 
     Record GLB :=
       {
         glb :> A;
-        glb_lb : ∀ (x : A), P x → glb ⊑ x;
-        glb_grst : ∀ (lb : A), (∀ (x : A), P x → lb ⊑ x) → lb ⊑ glb
+        glb_lb : ∀ (x : X), glb ⊑ (f x);
+        glb_grst : ∀ (lb : A), (∀ (x : X), lb ⊑ (f x)) → lb ⊑ glb
       }
     .
 
@@ -90,14 +90,16 @@ Section LUB_GLB.
   
   Notation "⊓ᵍ Q" := (GLB Q) : order_scope.
 
-  Definition LUB_Pair (x y : A) := (⊔ᵍ (Couple _ x y)).
+  Definition LUB_Pair (x y : A) :=
+    (⊔ᵍ (fun u : bool => match u with | true => x | false => y end)).
 
-  Definition GLB_Pair (x y : A) := (⊓ᵍ (Couple _ x y)).
+  Definition GLB_Pair (x y : A) :=
+    (⊓ᵍ (fun u : bool => match u with | true => x | false => y end)).
 
 End LUB_GLB.
 
-Arguments lub {_ _} _.
-Arguments glb {_ _} _.
+Arguments lub {_ _ _} _.
+Arguments glb {_ _ _} _.
 
 Notation "⊔ᵍ Q" := (LUB Q) : order_scope.
 

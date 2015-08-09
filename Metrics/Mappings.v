@@ -44,16 +44,9 @@ A mechanism to indicate contraction rate of a contractive mapping.
       CR_non_expansive : ∀ x, CR_fun x ⊑ x;
       CR_contracts : ∀ x, ⊥ ⊏ x → CR_fun x ⊏ x;
       CR_rate_indicator :
-        ∀ (ε ε' : (ApprType L)), ∃ n, (iterate CR_fun (proj1_sig ε') n) ⊏ (proj1_sig ε)
+        ∀ (ε ε' : (ApprType L)),
+          {n : nat | (iterate CR_fun (projT1 ε') n) ⊏ (projT1 ε)}
     }.
-
-  (** Two contraction rates are equal if their underlying maps are. *)
-  Theorem ContrRate_eq_simplify (f g : ContrRate) : f = g :> (_ → _) → f = g.
-  Proof.
-    intros; destruct f; destruct g; auto.
-  Qed.
-
-  Local Hint Extern 1 => rewrite ContrRate_eq_simplify.
 
   (** A contractive function is one that does decreases distance.
 Here, as ultrametric spaces can have different measures, we need a

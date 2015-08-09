@@ -22,8 +22,8 @@ distance from each other.
       CHS_seq :> Sequence U;
       CHS_cauchy :
         ∀ (ε : (ApprType L)),
-          ∃ (N : nat), ∀ (n m : nat),
-              N <= n → N ≤ m → (∂(CHS_seq n, CHS_seq m)) ⊏ (proj1_sig ε)
+          {N : nat | ∀ (n m : nat),
+              N <= n → N ≤ m → (∂(CHS_seq n, CHS_seq m)) ⊏ (projT1 ε)}
     }.
 
   Local Ltac simplify_1 :=
@@ -37,14 +37,14 @@ distance from each other.
   
   (** An alternative condition for cauchy sequences. *)
   Theorem Cauchy_condition_simpl (seq : Sequence U) :
-    (∀ (ε : (ApprType L)), ∃ N, ∀ n, N ≤ n → (∂(seq n, seq (S n))) ⊏ (proj1_sig ε)) →
-    (∀ (ε : (ApprType L)), ∃ N, ∀ n m, N <= n → N ≤ m → (∂(seq n, seq m)) ⊏ (proj1_sig ε)).
+    (∀ (ε : (ApprType L)), {N : nat | ∀ n, N ≤ n → (∂(seq n, seq (S n))) ⊏ (projT1 ε)}) →
+    (∀ (ε : (ApprType L)), {N : nat | ∀ n m, N <= n → N ≤ m → (∂(seq n, seq m)) ⊏ (projT1 ε)}).
   Proof.
     intros H ε.
     destruct (ML_bottom_dichotomy L) as [dicht|dicht].
     {
-      destruct (dicht _ (proj2_sig ε)) as [y [Hd1 [Hd2 Hd3]]].
-      destruct (H (exist _ _ Hd1)) as [N HN].
+      destruct (dicht _ (projT2 ε)) as [y Hd1 [Hd2 Hd3]].
+      destruct (H (existT _ _ Hd1)) as [N HN].
       exists N.
       simplify_1.
       {
@@ -59,16 +59,15 @@ distance from each other.
           apply lt_n_Sm_le in H2.
           eapply PO_Trans; [eapply UM_ineq|].
           apply lub_lst.
-          intros x Hx.
-          destruct Hx.
+          intros [|].
           apply IHle; trivial.
           apply HN; trivial.
         }
       }
     }
     {
-      destruct dicht as [ab [Hd1 [Hd2 Hd3]]].
-      destruct (H (exist _ _ Hd1)) as [N HN].
+      destruct dicht as [ab Hd1 Hd2].
+      destruct (H (existT _ _ Hd1)) as [N HN].
       exists N.
       simplify_1.
       {
@@ -77,13 +76,13 @@ distance from each other.
         {
           rewrite UM_eq_zero_dist; trivial.
           apply ML_appr_pos.
-          exact (proj2_sig ε).
+          exact (projT2 ε).
         }
         {
           apply le_lt_or_eq in H2; destruct H2 as [H2|H2]; [|omega].
           apply lt_n_Sm_le in H2.
           eapply LE_LT_Trans; [eapply (UM_ineq _ _ _ _ (seq m))|].
-          rewrite (Hd3 _ (HN _ H2)).
+          rewrite (Hd2 _ (HN _ H2)).
           rewrite lub_bot.
           apply IHle; trivial.
         }
