@@ -12,6 +12,8 @@ Metrics/Complete_UltraMetric.v
 Metrics/Banach.v
 Metrics/CBULt/CBULt.v
 Metrics/CBULt/GenProd.v
+Metrics/CBULt/Product.v
+Metrics/CBULt/Exponential.v
 Bisected/Bisected.v
 
 -R . CTDT
