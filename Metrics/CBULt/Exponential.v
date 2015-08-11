@@ -82,6 +82,18 @@ Section CBULt_Exp.
     apply (lub_ub (fun u : _ => (∂( CHS k u, CHS k' u))%metric)).
   Qed.
 
+  (** We need classical logic facts to prove that the limit of separated 
+cauchy sequences are indeed non-expansive. The reason is that we need
+to know if the distance of the inputs is already zero.
+If so, we prove that the distance of limits is also zero.
+If the distance is not zero, then we can use the fact that
+if two sequences have their distance bounded by a distance,
+then their limits also have a distance bounded by that distance.
+Note that this latter Lemma, uses ML_all_approximatable which is not
+generally provable constractively. E.g., it is not constructively provable
+for bisected spaces. *)
+  Require Import Coq.Logic.Classical.
+  
   Program Definition Separated_Cauchy_NonExp (chs : Cauchy_Sequence Exp_UM)
     : NonExpansive A B :=
     {|
@@ -91,9 +103,20 @@ Section CBULt_Exp.
   Next Obligation.
   Proof.
     intros chs x y; cbn.
-    admit.
-  Admitted.
-    
+    destruct (classic (⊥ = (∂( x, y))%metric)%lattice) as [H|H].
+    {
+      rewrite <- H.
+      replace y with x.
+      rewrite UM_eq_zero_dist; trivial.
+      apply UM_zero_dist_eq; auto.
+    }
+    {
+      apply Distance_of_Limits.
+      + split; trivial.
+      + intros n.
+        apply NE_non_expansive.
+    }
+  Qed.    
     
   Program Definition Exp_CUM : Complete_UltraMetric L :=
     {|

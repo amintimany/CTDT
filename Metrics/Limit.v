@@ -88,3 +88,41 @@ Section Limit_of_SubSeq.
   Qed.      
       
 End Limit_of_SubSeq.
+
+Section Distance_of_Limits.
+  Context {L : MLattice} {U : UltraMetric L} (Seq Seq' : Sequence U).
+
+  Theorem Distance_of_Limits (δ : L) (l : Limit Seq) (l' : Limit Seq') :
+    ⊥ ⊏ δ → (∀ n, ∂(Seq n, Seq' n) ⊑ δ) → ∂(l, l') ⊑ δ.
+  Proof.
+    intros H1 H2.
+    destruct (ML_all_approximatable _ _ H1) as [δ' H3 H4].
+    destruct (Lim_limit l (existT _ _ H4)) as [m H5].
+    destruct (Lim_limit l' (existT _ _ H4)) as [m' H6].
+    eapply PO_Trans; [apply UM_ineq|].
+    apply lub_lst; intros [].
+    {
+      rewrite UM_dist_sym.
+      eapply PO_Trans; [|apply H3].
+      apply (H5 (max m m') (l_le_max _ _)).
+    }
+    {
+      eapply PO_Trans; [apply UM_ineq|].
+      apply lub_lst; intros [].
+      {
+        apply H2.
+      }
+      {
+        eapply PO_Trans; [|apply H3].
+        apply (H6 (max m m') (r_le_max _ _)).
+      }
+    }
+  Qed.
+
+End Distance_of_Limits.
+
+
+
+
+
+      

@@ -40,7 +40,11 @@ constructive. *)
     ML_bottom_dichotomy :
       (∀ x, ML_appr_cond x → {y : ML_PO & ML_appr_cond y & ML_bot ⊏ y ∧ y ⊏ x})
       +
-      {ab : ML_PO & ML_appr_cond ab & (∀ x, x ⊏ ab → x = ML_bot)}
+      {ab : ML_PO & ML_appr_cond ab & (∀ x, x ⊏ ab → x = ML_bot)};
+    (** All elements are approximatable. This is off course not always constructively
+provable, e.g., in bisected spaces. Therefore, we try to avoid it as much as possible.*)
+    ML_all_approximatable :
+      ∀ x, ML_bot ⊏ x → {b : ML_PO & b ⊑ x & ML_appr_cond b}
   }.
 
 Arguments ML_PO _ : assert.

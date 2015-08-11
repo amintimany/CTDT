@@ -237,7 +237,7 @@ Proof.
 Qed.
 
 (** The kᵗʰ element (k < n) of the sequence for the nᵗʰ power of 1/2 is inhabitted. *)
-Theorem BD_Half_pow_gt (n k : nat) : n ≤ k → ¬ (BD_Half_pow n k).
+Theorem BD_Half_pow_ge (n k : nat) : n ≤ k → ¬ (BD_Half_pow n k).
 Proof.
   intros H.
   induction H.
@@ -256,7 +256,7 @@ Theorem BD_Half_pow_pos (n : nat) : ⊥ ⊏ (BD_Half_pow n).
 Proof.
   split; trivial.
   intros H.
-  apply (BD_Half_pow_gt n (S n)); [do 2 constructor |].
+  apply (BD_Half_pow_ge n (S n)); [do 2 constructor |].
   rewrite <- (equal_f (f_equal BD_agree H) (S n)).
   cbn; trivial.
 Qed.  
@@ -342,6 +342,35 @@ Definition BD_appr_pos := fun (x : BiDistPO) (H : BD_ApprType x) =>
         | Appr_Half_Pow n => BD_Half_pow_pos n
         end.
 
+Require Import Coq.Logic.Classical_Pred_Type
+        Coq.Logic.ChoiceFacts.
+
+Local Axiom ConstructiveIndefiniteDescription_nat : ConstructiveIndefiniteDescription_on nat.
+
+Theorem EveryBiDistAppr_helper (b : BiDist) :
+  ⊥ ⊏ b → {n : nat | (BD_Half_pow n) ⊑ b}.
+Proof.
+  intros H1.
+  apply ConstructiveIndefiniteDescription_nat.
+  cut (∃ n, ¬ b n).
+  {
+    intros [n H2].
+    exists n.
+    intros m H3.
+    destruct (le_gt_dec n m) as [H4|H4].
+    + contradict H2.
+      apply BD_decreases with (m := m); trivial.
+    + apply BD_Half_pow_lt; trivial.
+  }
+  {
+    apply not_all_ex_not.
+    intros H2.
+    apply H1.
+    apply BD_LE_ASym;trivial.
+    intros ? ?; trivial.
+  }
+Qed.
+
 (** BiDist forms an MLattice. *)
 Program Definition BiDistML : MLattice :=
   {|
@@ -370,7 +399,15 @@ Program Definition BiDistML : MLattice :=
               )
               (conj (BD_pos_half_pos x (BD_appr_pos x H))
                     (BD_pos_half_strictly_less x (BD_appr_pos x H)))
-        )
+        );
+    ML_all_approximatable :=
+      fun x H =>
+        existT2
+          _
+          _
+          (BD_Half_pow (proj1_sig (EveryBiDistAppr_helper x H)))
+          (proj2_sig (EveryBiDistAppr_helper x H))
+          (Appr_Half_Pow _)
   |}.
 
 Next Obligation.
@@ -382,8 +419,7 @@ Proof.
   apply H1.
   apply BD_Half_pow_Sn_n.
 Qed.
-
-
+  
 (** Powers of 1/2 are strictly decreasing *)
 Theorem BD_Half_pow_strict_decreasing (n k : nat) : k < n → BD_Half_pow n ⊏ BD_Half_pow k.
 Proof.
@@ -415,4 +451,4 @@ Proof.
   rewrite iterate_after_iterate.
   apply BD_Half_pow_strict_decreasing.
   omega.
-Qed.  
+Qed.
