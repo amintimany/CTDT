@@ -17,6 +17,8 @@ Metrics/CBULt/Product.v
 Metrics/CBULt/Exponential.v
 Metrics/CBULt/Equalizer.v
 Metrics/CBULt/Terminal.v
+Metrics/CBULt/CCC.v
+Metrics/CBULt/Complete.v
 Bisected/Bisected.v
 
 -R . CTDT
