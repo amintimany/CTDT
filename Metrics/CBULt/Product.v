@@ -28,14 +28,10 @@ Section CBULt_Product.
 
   Next Obligation.
   Proof.
-    match goal with
-      [H : (?a, ?b) = (?c, ?d)|- _] =>
-      cbn_rewrite (f_equal fst H);
-        cbn_rewrite (f_equal snd H)
-    end.
+    do 2 rewrite UM_eq_zero_dist.
     apply LE_Bottom_Bottom.
     apply lub_lst.
-    intros []; rewrite UM_eq_zero_dist; trivial.
+    intros []; trivial.
   Qed.
 
   Next Obligation.

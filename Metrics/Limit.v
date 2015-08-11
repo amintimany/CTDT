@@ -59,6 +59,23 @@ decreases below any positive distance as the sequence progresses. *)
      
 End Limit.
 
+Section Eq_Seq_Eq_Limits.
+  Context {L : MLattice}
+          {U : UltraMetric L}
+          (Seq Seq' : Sequence U)
+          (l : Limit Seq)
+          (l' : Limit Seq')
+  .
+
+  Theorem Eq_Seq_Eq_Limits : Seq = Seq' → l = l' :> U.
+  Proof.
+    intros H.
+    destruct H.
+    apply Limit_unique.
+  Qed.    
+
+End Eq_Seq_Eq_Limits.
+  
 Arguments Lim {_ _ _} _.
 Arguments Lim_limit {_ _ _} _ _.
 

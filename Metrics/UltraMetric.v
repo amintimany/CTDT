@@ -13,7 +13,7 @@ Record UltraMetric (L : MLattice) : Type :=
     UM_distance : UM_Carrier → UM_Carrier → L where "∂( x , y )" := (UM_distance x y);
     UM_dist_sym : ∀ x y, ∂(x, y) = ∂(y, x);
     UM_eq_zero_dist :
-      ∀ x y, x = y → (∂(x, y) = ⊥);
+      ∀ x, (∂(x, x) = ⊥);
     UM_zero_dist_eq :
       ∀ x y, (∂(x, y) = ⊥) → x = y;
     UM_ineq : ∀ x z y, (∂(x, z) ⊑ (∂(x, y) ⊔ ∂(y, z))%lattice)%order
