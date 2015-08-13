@@ -1,5 +1,5 @@
 Require Import Coq.Logic.ClassicalFacts.
-Require Import Coq.omega.Omega.
+Require Import Essentials.Omega.
 Require Import Essentials.Notations.
 Require Import Essentials.Facts_Tactics Essentials.Definitions.
 Require Import Lattice.PartialOrder Lattice.MLattice.
@@ -257,8 +257,11 @@ Proof.
   split; trivial.
   intros H.
   apply (BD_Half_pow_ge n (S n)); [do 2 constructor |].
-  rewrite <- (equal_f (f_equal BD_agree H) (S n)).
-  cbn; trivial.
+  match goal with
+    [|- ?A] =>
+    replace A with (⊥ (S n)); cbn; trivial
+  end.
+  apply (equal_f (f_equal BD_agree H) (S n)).
 Qed.  
 
 (** If an element is less than all finite powers 1/2 is the least element. *)

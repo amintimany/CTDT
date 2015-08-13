@@ -1,7 +1,7 @@
 Require Import Essentials.Notations.
 Require Import Essentials.Arith.
 Require Import Metrics.UltraMetric.
-Require Import Coq.omega.Omega.
+Require Import Essentials.Omega.
 
 Local Open Scope order_scope.
 Local Open Scope lattice_scope.

@@ -1,7 +1,7 @@
 Require Import Coq.Arith.Compare_dec.
 Require Import Essentials.Notations.
 Require Import Metrics.UltraMetric.
-Require Import Coq.omega.Omega.
+Require Import Essentials.Omega.
 
 Section Cauchy_Sequence.
   Context {L : MLattice} (U : UltraMetric L).

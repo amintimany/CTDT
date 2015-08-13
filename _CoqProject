@@ -2,6 +2,7 @@ Essentials/Notations.v
 Essentials/Types.v
 Essentials/Definitions.v
 Essentials/Facts_Tactics.v
+Essentials/Omega.v
 Essentials/Arith.v
 Lattice/PartialOrder.v
 Lattice/MLattice.v
@@ -22,4 +23,6 @@ Metrics/CBULt/Complete.v
 Metrics/CBULt/MCat.v
 Bisected/Bisected.v
 MCat/MCat.v
+MCat/Product.v
+
 -R . CTDT

@@ -1,3 +1,5 @@
+Require Import
+        Essentials.Types.
 Require Import Metrics.Mappings.
 Require Import Metrics.Complete_UltraMetric.
 Require Import Metrics.CBULt.Product.
@@ -15,7 +17,7 @@ In addition, an M-category must have a terminal object.
  *)
   Record MCat : Type :=
     {
-      MC_Obj : Type;
+      MC_Obj :> Type;
       MC_Hom : MC_Obj → MC_Obj → (Complete_UltraMetric L);
       MC_compose :
         ∀ {a b c : MC_Obj},

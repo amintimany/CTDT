@@ -1,5 +1,5 @@
 Require Import Essentials.Notations.
-Require Import Coq.omega.Omega.
+Require Import Essentials.Omega.
 
 Theorem l_le_max : ∀ n m, n ≤ max n m.
 Proof.

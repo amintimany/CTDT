@@ -1,4 +1,7 @@
-Require Import Essentials.Notations Essentials.Facts_Tactics Essentials.Definitions.
+Require Import
+        Essentials.Facts_Tactics
+        Essentials.Notations
+        Essentials.Definitions.
 Require Import Metrics.UltraMetric.
 Require Import Metrics.Limit.
 

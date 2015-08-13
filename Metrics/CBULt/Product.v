@@ -1,8 +1,14 @@
-Require Import Essentials.Notations Essentials.Arith.
+Require Import
+        Essentials.Notations
+        Essentials.Facts_Tactics
+        Essentials.Types
+        Essentials.Notations
+        Essentials.Arith.
 Require Import Lattice.MLattice Metrics.UltraMetric
         Metrics.Cauchy Metrics.Limit
         Metrics.Mappings Metrics.Complete_UltraMetric.
-Require Import Categories.Category.Category
+Require Import
+        Categories.Category.Category
         Categories.Basic_Cons.Product.
 
 Require Import Metrics.CBULt.CBULt.

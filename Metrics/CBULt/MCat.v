@@ -1,3 +1,7 @@
+Require Import
+        Essentials.Types
+        Essentials.Facts_Tactics
+.
 Require Import Lattice.MLattice.
 Require Import Metrics.Mappings
         Complete_UltraMetric.
@@ -24,7 +28,7 @@ Section CBULt_MCat.
               fun w => NonExp_compose (fst w) (snd w)
           |};
       MC_Term := CBULt_Terminal
-    |}.
+    |}.             
   
   Next Obligation.
     apply lub_lst.
