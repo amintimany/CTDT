@@ -1,5 +1,5 @@
 Require Import Essentials.Notations.
-Require Import Metrics.UltraMetric Metrics.Limit Metrics.Cauchy.
+Require Export Metrics.UltraMetric Metrics.Limit Metrics.Cauchy.
 
 (** A complete ultra metric space is an ultra metric space that is cauchy complete, i.e.,
 all cauchy sequences have a limit.
