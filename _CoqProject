@@ -24,5 +24,7 @@ Metrics/CBULt/MCat.v
 Bisected/Bisected.v
 MCat/MCat.v
 MCat/Product.v
+MCat/Opposite.v
+MCat/MFunc.v
 
 -R . CTDT

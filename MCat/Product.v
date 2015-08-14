@@ -8,7 +8,6 @@ Require Import Metrics.CBULt.Product.
 Require Import Categories.Category.Main.
 Require Import
         Categories.Ext_Cons.Prod_Cat.Prod_Cat.
-Require Import Categories.Basic_Cons.Terminal.
 Require Import MCat.MCat.
 
 Local Open Scope order_scope.
@@ -35,17 +34,7 @@ Section MCat_Prod.
                 (MC_compose M (fst (fst w), (fst (snd w))),
                  MC_compose M' (snd (fst w), (snd (snd w))))
           |};
-      MC_id := fun _ => (MC_id M, MC_id M');
-      MC_Term :=
-        {|
-          terminal :=
-            (terminal (MC_Term M),
-             terminal(MC_Term M'));
-          t_morph :=
-            fun _ =>
-              (t_morph (MC_Term M) _,
-               t_morph (MC_Term M') _)
-        |}
+      MC_id := fun _ => (MC_id M, MC_id M')
     |}.
 
   Local Ltac lub2ub t :=
@@ -96,20 +85,10 @@ Section MCat_Prod.
     rewrite (MC_id_unit_right M').
     trivial.
   Defined.
-  
-  Next Obligation.
-  Proof.
-    match goal with
-      [|- (?f, ?g) = (?h, ?i)] =>
-      rewrite (t_morph_unique(MC_Term M) _ f h);
-        rewrite (t_morph_unique(MC_Term M') _ g i)
-    end.
-    trivial.
-  Defined.
 
 End MCat_Prod.
 
-(** Asimple test showing that product of two M-categories has as its
+(** A simple test showing that product of two M-categories has as its
 underlying category the product of the underlying categories of
 the input M-categories. *)
 Goal (∀ L (M M' : MCat L), (M × M')%category = (@MCat_Prod L M M')).

@@ -8,8 +8,7 @@ Require Import Metrics.Mappings
 Require Import
         Metrics.CBULt.CBULt
         Metrics.CBULt.Product
-        Metrics.CBULt.Exponential
-        Metrics.CBULt.Terminal.
+        Metrics.CBULt.Exponential.
 Require Import MCat.MCat.
 Require Import Categories.Category.Main.
 
@@ -25,11 +24,18 @@ Section CBULt_MCat.
         fun a b c =>
           {|
             NE_fun :=
-              fun w => NonExp_compose (fst w) (snd w)
+              fun w => NonExp_compose (fst w) (snd w);
+            NE_non_expansive := _
           |};
-      MC_Term := CBULt_Terminal
-    |}.             
-  
+      MC_assoc := @NonExp_compose_assoc _;
+      MC_assoc_sym :=
+        fun _ _ _ _ _ _ _ =>
+          eq_sym (@NonExp_compose_assoc _ _ _ _ _ _ _ _);
+      MC_id := NonExp_id;
+      MC_id_unit_left := @NonExp_id_unit_left _;
+      MC_id_unit_right := @NonExp_id_unit_right _
+    |}.
+    
   Next Obligation.
     apply lub_lst.
     intros x.
@@ -47,7 +53,7 @@ Section CBULt_MCat.
       eapply PO_Trans; [|apply lub_ub]; trivial.
     }
   Qed.
-
+    
 End CBULt_MCat.
 
 (** A simple test that shows that when a category is taken to be the underlying

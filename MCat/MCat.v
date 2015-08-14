@@ -4,7 +4,6 @@ Require Import Metrics.Mappings.
 Require Import Metrics.Complete_UltraMetric.
 Require Import Metrics.CBULt.Product.
 Require Import Categories.Category.Main.
-Require Import Categories.Basic_Cons.Terminal.
 
 Section MCat.
   Context {L : MLattice}.
@@ -17,7 +16,7 @@ In addition, an M-category must have a terminal object.
  *)
   Record MCat : Type :=
     {
-      MC_Obj :> Type;
+      MC_Obj : Type;
       MC_Hom : MC_Obj → MC_Obj → (Complete_UltraMetric L);
       MC_compose :
         ∀ {a b c : MC_Obj},
@@ -56,8 +55,7 @@ In addition, an M-category must have a terminal object.
           id := @MC_id;
           id_unit_left := MC_id_unit_left;
           id_unit_right := MC_id_unit_right
-        |};
-      MC_Term : Terminal MC_Cat
+        |}
     }.
 
 End MCat.
