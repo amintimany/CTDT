@@ -2,6 +2,7 @@ Require Import Essentials.Notations.
 Require Import Essentials.Arith.
 Require Import Metrics.UltraMetric.
 Require Import Essentials.Omega.
+Require Import Essentials.Facts_Tactics.
 
 Local Open Scope order_scope.
 Local Open Scope lattice_scope.
@@ -80,9 +81,24 @@ Arguments Lim {_ _ _} _.
 Arguments Lim_limit {_ _ _} _ _.
 
 Section Limit_of_SubSeq.
-  Context {L : MLattice} {U : UltraMetric L} (Seq : Sequence U).
+  Context {L : MLattice} {U : UltraMetric L}.
 
-  Theorem Limit_of_SubSeq (l : Limit Seq) (l' : Limit (fun n => Seq (S n))) : l = l' :> U.
+  Program Definition Limit_of_SubSeq {Seq : Sequence U} (l : Limit Seq) (m : nat) :
+    Limit (fun n => Seq (m + n)) :=
+    {|
+      Lim := l
+    |}.
+
+  Next Obligation.
+  Proof.
+    destruct (Lim_limit l ε) as [N H].
+    exists (m + N).
+    intros n H2.
+    apply H.
+    abstract omega.
+  Defined.
+
+  Theorem Limit_of_SubSeq_equal_1 {Seq : Sequence U} (l : Limit Seq) (l' : Limit (fun n => Seq (S n))) : l = l' :> U.
   Proof.
     cut (∀ (ε : (ApprType L)),
             {N : nat | ∀ (n : nat),
@@ -102,10 +118,48 @@ Section Limit_of_SubSeq.
       destruct n; [omega|].
       cut (m ≤ n); auto; omega.
     }
-  Qed.      
+  Qed.
+
+  Theorem Limit_of_SubSeq_equal {Seq : Sequence U} (l : Limit Seq) (m : nat) (l' : Limit (fun n => Seq (m + n))) : l = l' :> U.
+  Proof.
+    induction m.
+    + apply Limit_unique.
+    + rewrite ((IHm (Limit_of_SubSeq l m))).
+      set (W := Limit_of_SubSeq_equal_1 (Limit_of_SubSeq l m)).
+      cbn in W.
+      replace (fun n : nat => Seq (m + S n)) with (fun n : nat => Seq (S m + n)) in W
+        by (abstract (FunExt; apply f_equal; omega)).
+      apply W.
+  Qed.
       
 End Limit_of_SubSeq.
 
+Section Limit_of_ConstSeq.
+  Context {L : MLattice} {U : UltraMetric L} (A : U).
+
+  Program Definition Limit_of_ConstSeq :
+    Limit (fun _ => A) :=
+    {|
+      Lim := A
+    |}.
+
+  Next Obligation.
+  Proof.
+    exists 0.
+    intros ? ?.
+    rewrite UM_eq_zero_dist.
+    apply ML_appr_pos.
+    apply (projT2 ε).
+  Qed.    
+  
+  Theorem Limit_of_ConstSeq_equal (l : Limit (fun _ => A)) : l = A :> U.
+  Proof.
+    change A with (Lim Limit_of_ConstSeq).
+    apply Limit_unique.
+  Qed.
+  
+End Limit_of_ConstSeq.
+  
 Section Distance_of_Limits.
   Context {L : MLattice} {U : UltraMetric L} (Seq Seq' : Sequence U).
 
@@ -137,9 +191,3 @@ Section Distance_of_Limits.
   Qed.
 
 End Distance_of_Limits.
-
-
-
-
-
-      

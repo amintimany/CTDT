@@ -61,3 +61,46 @@ In addition, an M-category must have a terminal object.
 End MCat.
 
 Arguments MCat _ : clear implicits.
+
+Section NonExpansive_Compose_left.
+  Context {L : MLattice} (M : MCat L) {a b c : M} (f : MC_Hom M a b).
+
+  Program Definition NonExpansive_Compose_left :
+    NonExpansive (MC_Hom M b c) (MC_Hom M a c)
+    :=
+    {|
+      NE_fun := fun u : MC_Hom M b c => MC_compose M (f, u)
+    |}.
+
+  Next Obligation.
+  Proof.
+    eapply PO_Trans; [apply NE_non_expansive|].
+    cbn.
+    rewrite UM_eq_zero_dist.
+    rewrite lub_sym.
+    rewrite lub_bot.
+    trivial.
+  Qed.
+
+End NonExpansive_Compose_left.
+
+Section NonExpansive_Compose_right.
+  Context {L : MLattice} (M : MCat L) {a b c : M} (g : MC_Hom M b c).
+
+  Program Definition NonExpansive_Compose_right :
+    NonExpansive (MC_Hom M a b) (MC_Hom M a c)
+    :=
+    {|
+      NE_fun := fun u : MC_Hom M a b => MC_compose M (u, g)
+    |}.
+
+  Next Obligation.
+  Proof.
+    eapply PO_Trans; [apply NE_non_expansive|].
+    cbn.
+    rewrite UM_eq_zero_dist.
+    rewrite lub_bot.
+    trivial.
+  Qed.
+
+End NonExpansive_Compose_right.

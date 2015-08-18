@@ -26,5 +26,6 @@ MCat/MCat.v
 MCat/Product.v
 MCat/Opposite.v
 MCat/MFunc.v
+MCat/IncreasingCauchyTower.v
 
 -R . CTDT

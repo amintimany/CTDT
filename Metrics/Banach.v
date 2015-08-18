@@ -53,7 +53,7 @@ Section Banach.
     change (fun n : nat => f (CHS_seq _ iterate_f_cauchy n))
     with (fun n : nat => (CHS_seq _ iterate_f_cauchy (S n))).
     symmetry.
-    apply Limit_of_SubSeq.
+    apply Limit_of_SubSeq_equal_1.
   Qed.
 
   Local Open Scope order_scope.
