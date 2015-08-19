@@ -238,6 +238,13 @@ Section Contractive_Continuous.
     apply H2; trivial.
   Qed.
 
+  Lemma Contractive_Continuous_eq (lm' : Limit (fun n => f (Seq n))) :
+    (Lim lm') = f lm.
+  Proof.
+    transitivity Contractive_Continuous; trivial.
+    apply Limit_unique.
+  Qed.
+
 End Contractive_Continuous.
 
 (** Every non-expansive function is continuous. *)
@@ -263,6 +270,13 @@ Section NonExpansive_Continuous.
     intros n H3.
     eapply LE_LT_Trans; [apply NE_non_expansive|].
     apply H2; trivial.
+  Qed.
+
+  Lemma NonExpansive_Continuous_eq (lm' : Limit (fun n => f (Seq n))) :
+    (Lim lm') = f lm.
+  Proof.
+    transitivity NonExpansive_Continuous; trivial.
+    apply Limit_unique.
   Qed.
 
 End NonExpansive_Continuous.

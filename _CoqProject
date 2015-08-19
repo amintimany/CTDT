@@ -26,6 +26,8 @@ MCat/MCat.v
 MCat/Product.v
 MCat/Opposite.v
 MCat/MFunc.v
-MCat/IncreasingCauchyTower.v
+MCat/IncreasingCauchyTower/IncreasingCauchyTower.v
+MCat/IncreasingCauchyTower/Cone_Limit_Related_CoCone.v
+MCat/IncreasingCauchyTower/Related_CoCone_Cone_Limit.v
 
 -R . CTDT
