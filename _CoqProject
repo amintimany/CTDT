@@ -29,5 +29,6 @@ MCat/MFunc.v
 MCat/IncreasingCauchyTower/IncreasingCauchyTower.v
 MCat/IncreasingCauchyTower/Cone_Limit_Related_CoCone.v
 MCat/IncreasingCauchyTower/Related_CoCone_Cone_Limit.v
+MCat/IncreasingCauchyTower/Ops_and_Props.v
 
 -R . CTDT
