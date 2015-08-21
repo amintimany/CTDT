@@ -41,8 +41,10 @@ is contractive. *)
   Record LocallyContractive : Type :=
     {
       LCN_FO : M → M';
+      LCN_ContrRate : ContrRate L;
       LCN_FA : ∀ {a b},
-          Contractive
+          Controlled_Contractive
+            LCN_ContrRate
             (MC_Hom M a b)
             (MC_Hom M' (LCN_FO a) (LCN_FO b));
       LCN_F_id :

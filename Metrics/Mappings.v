@@ -65,7 +65,7 @@ We also require a contraction rate.
       CN_contractive :
         ∀ x y, (∂(CN_fun x, CN_fun y) ⊑ CN_ContrRate (∂(x, y)))%order%metric
     }.
-
+  
   (** Two contractive mappings are equal if their underlying maps are. *)
   Theorem Contractive_eq_simplify (f g : Contractive) :
     f = g :> (_ → _) →
@@ -90,6 +90,47 @@ Arguments CR_rate_indicator {_} _ _ _.
 Arguments CN_fun {_ _ _} _ _.
 Arguments CN_ContrRate {_ _ _} _.
 Arguments CN_contractive {_ _ _} _ _ _.
+
+(** A contractive mapping with explicit contraction rate.  *)
+Record Controlled_Contractive
+       {L : MLattice}
+       (rt : ContrRate L)
+       (U U' : UltraMetric L)
+  : Type :=
+  {
+    CCN_fun :> U → U';
+    CCN_contractive :
+      ∀ x y, (∂(CCN_fun x, CCN_fun y) ⊑ rt (∂(x, y)))%order%metric
+  }.
+
+Arguments CCN_fun {_ _ _ _} _ _.
+Arguments CCN_contractive {_ _ _ _} _ _ _.
+
+(** Controlled contractive is contractive. *)
+Definition Controlled_Contractive_Contractive
+           {L : MLattice}
+           {rt : ContrRate L}
+           {U U' : UltraMetric L}
+           (ccn : Controlled_Contractive rt U U')
+  :
+    Contractive U U' :=
+  {|
+    CN_fun := CCN_fun ccn;
+    CN_ContrRate := rt;
+    CN_contractive := CCN_contractive ccn
+  |}.
+
+(** Every contractive map is controlled by its contraction rate. *)
+Definition Contractive_Controlled_Contractive
+           {L : MLattice}
+           {U U' : UltraMetric L}
+           (cn : Contractive U U')
+  :
+    Controlled_Contractive (CN_ContrRate cn) U U' :=
+  {|
+    CCN_fun := CN_fun cn;
+    CCN_contractive := CN_contractive cn
+  |}.
 
 Notation "'ρ' f" := (CN_ContrRate f) : metric_scope.
 

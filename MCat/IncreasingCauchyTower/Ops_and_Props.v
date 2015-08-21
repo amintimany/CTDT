@@ -272,7 +272,7 @@ is turned into:
       cbn.
       cbn_rewrite <- (@F_compose _ _ F); cbn.
       cbn_rewrite <- (@F_id _ _ F).
-      eapply LE_LT_Trans;[eapply (CN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
+      eapply LE_LT_Trans;[eapply (CCN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
       eapply LE_LT_Trans; [apply CR_non_expansive|].
       eapply LE_LT_Trans; [|apply Hd3].
       apply lub_lst; intros [|]; apply H1.
@@ -288,7 +288,7 @@ is turned into:
       cbn.
       cbn_rewrite <- (@F_compose _ _ F); cbn.
       cbn_rewrite <- (@F_id _ _ F).
-      eapply LE_LT_Trans;[eapply (CN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
+      eapply LE_LT_Trans;[eapply (CCN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
       eapply LE_LT_Trans; [apply CR_non_expansive|].
       rewrite H1.
       rewrite lub_bot.
@@ -458,7 +458,7 @@ the cone to the version where F is applied to that ICT. *)
       specialize (H1 _ H2).
       cbn_rewrite <- (@F_compose _ _ F); cbn.
       cbn_rewrite <- (@F_id _ _ F).
-      eapply LE_LT_Trans;[eapply (CN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
+      eapply LE_LT_Trans;[eapply (CCN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
       eapply LE_LT_Trans; [apply CR_non_expansive|].
       eapply LE_LT_Trans; [|apply Hd3].
       apply lub_lst; intros [|]; apply H1.
@@ -473,7 +473,7 @@ the cone to the version where F is applied to that ICT. *)
       apply Hd2 in H1.
       cbn_rewrite <- (@F_compose _ _ F); cbn.
       cbn_rewrite <- (@F_id _ _ F); cbn.
-      eapply LE_LT_Trans;[eapply (CN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
+      eapply LE_LT_Trans;[eapply (CCN_contractive (@LCN_FA _ _ _ F _ _))|]; cbn.
       eapply LE_LT_Trans; [apply CR_non_expansive|].
       eapply LE_LT_Trans; [|apply (ML_appr_pos _ _ (projT2 ε))].
       apply lub_lst; intros [|]; match goal with [|- ?A ⊑ ?B] => replace B with A; trivial end.
