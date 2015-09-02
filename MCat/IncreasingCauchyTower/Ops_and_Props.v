@@ -76,43 +76,44 @@ is turned into:
     |}.
 
   (** Interaction of ICT_Funct with its shifted counterpart. *)
-  Theorem ICT_Func_Shift_One {m n : nat} (h : m ≤ n) (h' : S m ≤ S n) :
+  Theorem ICT_Func_Shift_One
+          {m n : nat}
+          (h : (m ≤ n)%omegacat)
+          (h' : (S m ≤ S n)%omegacat) :
     ((ICT_Func ICT) _a h' = (ICT_Func ICT_Shift_One) _a h)%morphism.
   Proof.
     cbn.
-    induction (le_Tle h) as [|u t IHt].
+    induction h as [|u t IHt].
     {
-      replace h' with (le_n (S m)) by apply proof_irrelevance.
-      rewrite le_Tle_n.
-      trivial.
+      replace h' with (Tle_n (S m)) by apply Tle_is_HProp; trivial.
     }
     {
       dependent destruction h'.
       + exfalso; eapply Not_S_Tle; eauto.
-      + rewrite le_Tle_S.
+      +
         cbn.
-        rewrite (IHt (Tle_le t)).
+        rewrite IHt.
         trivial.
     }
   Qed.
 
   (** Interaction of ICT_inv_Funct with its shifted counterpart. *)
-  Theorem ICT_inv_Func_Shift_One {m n : nat} (h : m ≤ n) (h' : S m ≤ S n) :
+  Theorem ICT_inv_Func_Shift_One
+          {m n : nat}
+          (h : (m ≤ n)%omegacat)
+          (h' : (S m ≤ S n)%omegacat) :
     ((ICT_inv_Func ICT) _a h' = (ICT_inv_Func ICT_Shift_One) _a h)%morphism.
   Proof.
     cbn.
-    induction (le_Tle h) as [|u t IHt].
+    induction h as [|u t IHt].
     {
-      replace h' with (le_n (S m)) by apply proof_irrelevance.
-      rewrite le_Tle_n.
-      trivial.
+      replace h' with (Tle_n (S m)) by apply Tle_is_HProp; trivial.
     }
     {
       dependent destruction h'.
       + exfalso; eapply Not_S_Tle; eauto.
-      + rewrite le_Tle_S.
-        cbn.
-        rewrite (IHt (Tle_le t)).
+      + cbn.
+        rewrite IHt.
         trivial.
     }
   Qed.
@@ -134,9 +135,10 @@ is turned into:
   Next Obligation.
   Proof.
     intros c c' h; cbn in *.
-    assert (h' : S c' ≤ S c) by abstract omega.
-    cbn_rewrite (Trans_com Cn h').
-    cbn_rewrite (ICT_Func_Shift_One h h').
+    assert (h' := Tle_le h).
+    assert (h'' : (S c' ≤ S c)%omegacat) by (apply le_Tle; abstract omega).
+    cbn_rewrite (Trans_com Cn h'').
+    cbn_rewrite (ICT_Func_Shift_One h h'').
     trivial.
   Qed.    
 
@@ -160,10 +162,11 @@ the cone to its shifted version obtained from that cone. *)
     Next Obligation.
     Proof.
       intros c c' h; cbn in *.
-      assert (h' : S c' ≤ S c) by abstract omega.
-      etransitivity; [apply (CCIW_injs_form_cocone _ _ CCn _ _ h')|].
+      assert (h' := Tle_le h).
+      assert (h'' : (S c' ≤ S c)%omegacat) by (apply le_Tle; abstract omega).
+      etransitivity; [apply (CCIW_injs_form_cocone _ _ CCn _ _ h'')|].
       cbn.
-      cbn_rewrite (ICT_inv_Func_Shift_One h h').
+      cbn_rewrite (ICT_inv_Func_Shift_One h h'').
       trivial.
     Qed.
 
@@ -335,16 +338,12 @@ F is applied to the ICT. *)
       rewrite_Trans_com Cn h W; rewrite W; clear W.
       rewrite_Trans_com (CCIW_CoCone _ _ CCn) h W; rewrite W; clear W.
       rewrite MC_id_unit_right.
-      induction (le_Tle h) as [|m t IHt].
+      induction h as [|m t IHt].
       + cbn; repeat rewrite MC_id_unit_right; repeat rewrite MC_id_unit_left.
         trivial.
       + cbn in *.
-        specialize (IHt (Tle_le t)).
-        rewrite_Trans_com Cn (le_S _ _ (le_n m)) W; rewrite W in IHt; clear W.
-        rewrite_Trans_com (CCIW_CoCone _ _ CCn) (le_S _ _ (le_n m)) W; rewrite W in IHt; clear W.
-        rewrite le_Tle_S, le_Tle_n in IHt.
-        cbn in IHt.
-        rewrite MC_id_unit_right, MC_id_unit_left in IHt.
+        rewrite_Trans_com Cn (Tle_S _ _ (Tle_n m)) W; rewrite W in IHt; clear W.
+        rewrite_Trans_com (CCIW_CoCone _ _ CCn) (Tle_S _ _ (Tle_n m)) W; rewrite W in IHt; clear W.
         rewrite (MC_assoc _ _ _ _ _ (Trans Cn (S m))).
         rewrite MC_assoc_sym.
         etransitivity; [apply IHt|].
@@ -391,16 +390,12 @@ interacting with the corresponding cone in the version where F is applied to the
       rewrite_Trans_com Cn h W; rewrite W; clear W.
       rewrite_Trans_com (CCIW_CoCone _ _ CCn) h W; rewrite W; clear W.
       rewrite MC_id_unit_left.
-      induction (le_Tle h) as [|m t IHt].
+      induction h as [|m t IHt].
       + cbn; repeat rewrite MC_id_unit_right; repeat rewrite MC_id_unit_left.
         trivial.
       + cbn in *.
-        specialize (IHt (Tle_le t)).
-        rewrite_Trans_com Cn (le_S _ _ (le_n m)) W; rewrite W in IHt; clear W.
-        rewrite_Trans_com (CCIW_CoCone _ _ CCn) (le_S _ _ (le_n m)) W; rewrite W in IHt; clear W.
-        rewrite le_Tle_S, le_Tle_n in IHt.
-        cbn in IHt.
-        rewrite MC_id_unit_right, MC_id_unit_left in IHt.
+        rewrite_Trans_com Cn (Tle_S _ _ (Tle_n m)) W; rewrite W in IHt; clear W.
+        rewrite_Trans_com (CCIW_CoCone _ _ CCn) (Tle_S _ _ (Tle_n m)) W; rewrite W in IHt; clear W.
         rewrite (MC_assoc _ _ _ _ _ (Trans Cn (S m))).
         rewrite (MC_assoc_sym _ _ _ _ _ (@OmegaCat.FA_fx (M^op) ICT (ICT_fs ICT) c' m t)).
         etransitivity; [apply IHt|].

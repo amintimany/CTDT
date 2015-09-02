@@ -38,7 +38,7 @@ Section Cone_Limit_Related_CoCone.
   .
   
   Local Program Definition Another_Cone_Limit__The_Related_CoCone_aux_cone_to_Cn
-        (n n': nat) (h : n ≤ n')
+        (n n': nat) (h : (n ≤ n')%omegacat)
     :
       LoKan_Cone_Morph
         (Aux_cone ICT n)
@@ -92,12 +92,12 @@ Section Cone_Limit_Related_CoCone.
     rewrite <- W.
     clear W.
     {
-      induction (le_Tle h) as [|m t IHt].
+      induction h as [|m t IHt].
       {
         cbn; rewrite MC_id_unit_right; trivial.
       }
       {
-        rewrite (IHt (Tle_le t)).
+        rewrite IHt.
         cbn.
         rewrite (MC_assoc_sym).
         rewrite Aux_cone_fun_S.

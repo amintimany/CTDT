@@ -68,32 +68,18 @@ Furthermore, the distance between fₙ ∘ gₙ and id_Aₙ₊₁ decreases as n
     Definition ICT_inv_Func :=
       OmegaCat_Func (ICT_Objs ICT) (ICT_fs ICT).
 
-    (** conversion of id to (ICT_Func _a) (le_n a : a ≤ a) *)
-    Lemma MC_id_ICT_Func a :
-      MC_id M = (ICT_Func _a)%morphism (le_n a).
-    Proof.
-      cbn.
-      rewrite le_Tle_n; trivial.
-    Qed.
-
     (** conversion of gₙ to (ICT_Func _a) (le_S _ _ (le_n n) : n ≤ S n) *)
     Lemma ICT_gs_ICT_Func n :
-      ICT_gs ICT n = (ICT_Func _a (le_S _ _ (le_n n)))%morphism.
+      ICT_gs ICT n = (ICT_Func _a (Tle_S _ _ (Tle_n n)))%morphism.
     Proof.
-      cbn.
-      rewrite le_Tle_S.
-      rewrite le_Tle_n.
       cbn.
       cbn_rewrite (MC_id_unit_left M); trivial.
     Qed.
 
     (** conversion of fₙ to (ICT_inv_Func _a) (le_S _ _ (le_n n) : n ≤ S n) *)
     Lemma ICT_fs_ICT_inv_Func n :
-      ICT_fs ICT n = (ICT_inv_Func _a (le_S _ _ (le_n n)))%morphism.
+      ICT_fs ICT n = (ICT_inv_Func _a (Tle_S _ _ (Tle_n n)))%morphism.
     Proof.
-      cbn.
-      rewrite le_Tle_S.
-      rewrite le_Tle_n.
       cbn.
       cbn_rewrite (MC_id_unit_right M); trivial.
     Qed.
@@ -102,25 +88,25 @@ Furthermore, the distance between fₙ ∘ gₙ and id_Aₙ₊₁ decreases as n
     Ltac solve_simpl_omega_func_eq :=
       match goal with
       |  [|- (?F _a ?x)%morphism = (?F _a ?y)%morphism] =>
-         cutrewrite (x = y); [trivial|apply proof_irrelevance]
+         cutrewrite (x = y); [trivial|apply Tle_is_HProp]
       | [|- OmegaCat.FA_fx _ ?f _ _ ?x = OmegaCat.FA_fx _ ?f _ _ ?y] =>
         cutrewrite (x = y); [trivial|apply Tle_is_HProp]
       end.
 
     Local Hint Extern 1 => solve_simpl_omega_func_eq.
 
-    Lemma ICT_inv_Func_ICT_Func_id  a b (g : a ≤ b) :
+    Lemma ICT_inv_Func_ICT_Func_id a b (g : (a ≤ b)%omegacat) :
       (MC_compose M) ((ICT_inv_Func _a)%morphism g, (ICT_Func _a)%morphism g) = MC_id M.
     Proof.
       cbn in *.
-      induction (le_Tle g) as [|m t IHt].
+      induction g as [|m t IHt].
       + cbn; apply MC_id_unit_left.
       + cbn in *.
         rewrite MC_assoc_sym.
         rewrite (MC_assoc _ _ _ _ _ _ (ICT_gs ICT m)).
         cbn_rewrite ICT_gs_split_epi.
         rewrite MC_id_unit_right.
-        apply (IHt (Tle_le t)).
+        apply IHt.
     Qed.
       
     (** A fundamental property of increasing cauchy towers:
@@ -129,11 +115,15 @@ Given (g : a ≤ b) (h : c ≤ b) (i : a ≤ c),
 (ICT_Func _a h)  ∘ (ICT_inv_Func _a g) = (ICT_inv_Func _a i)
 
 *)
-    Lemma ICT_inv_Func_ICT_Func_1  a b c (g : a ≤ b) (h : c ≤ b) (i : a ≤ c) :
+    Lemma ICT_inv_Func_ICT_Func_1
+          a b c
+          (g : (a ≤ b)%omegacat)
+          (h : (c ≤ b)%omegacat)
+          (i : (a ≤ c)%omegacat) :
       (MC_compose M) ((ICT_inv_Func _a)%morphism g, (ICT_Func _a)%morphism h) =
       (ICT_inv_Func _a)%morphism i.
     Proof.
-      replace g with (le_trans _ _ _ i h) by (apply proof_irrelevance).
+      replace g with (Tle_trans _ _ _ i h) by (apply Tle_is_HProp).
       cbn.
       cbn_rewrite (@F_compose _ _ ICT_inv_Func).
       rewrite MC_assoc_sym.
@@ -147,11 +137,15 @@ Given (g : a ≤ b) (h : c ≤ b) (i : c ≤ a),
 (ICT_Func _a h)  ∘ (ICT_inv_Func _a g) = (ICT_Func _a i)
 
 *)
-    Lemma ICT_inv_Func_ICT_Func_2  a b c (g : a ≤ b) (h : c ≤ b) (i : c ≤ a) :
+    Lemma ICT_inv_Func_ICT_Func_2
+          a b c
+          (g : (a ≤ b)%omegacat)
+          (h : (c ≤ b)%omegacat)
+          (i : (c ≤ a)%omegacat) :
       (MC_compose M) ((ICT_inv_Func _a)%morphism g, (ICT_Func _a)%morphism h) =
       (ICT_Func _a)%morphism i.
     Proof.
-      replace h with (le_trans _ _ _ i g) by (apply proof_irrelevance).
+      replace h with (Tle_trans _ _ _ i g) by (apply Tle_is_HProp).
       cbn.
       cbn_rewrite (@F_compose _ _ ICT_Func).
       rewrite MC_assoc.
@@ -174,7 +168,7 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
       match gt_eq_gt_dec n m with
       | inleft H =>
         match H with
-        | left h => (ICT_Func _a)%morphism (le_trans _ _ _ (le_S _ _ (le_n n)) h)
+        | left h => (ICT_Func _a)%morphism (Tle_trans _ _ _ (Tle_S _ _ (Tle_n n)) (le_Tle h))
         | right W =>
           match W in _ = y return
                 ((ICT y) –≻ (ICT n))%morphism
@@ -182,7 +176,7 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
           | eq_refl => id
           end
         end
-      | inright h => (ICT_inv_Func _a)%morphism (le_trans _ _ _ (le_S _ _ (le_n m)) h)
+      | inright h => (ICT_inv_Func _a)%morphism (Tle_trans _ _ _ (Tle_S _ _ (Tle_n m)) (le_Tle h))
       end.
 
     Lemma Aux_cone_fun_S m x :
@@ -196,15 +190,15 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
         repeat rewrite ICT_fs_ICT_inv_Func; repeat rewrite ICT_gs_ICT_Func; cbn
       .
       + erewrite ICT_inv_Func_ICT_Func_2; trivial.
-      + rewrite MC_id_ICT_Func.
+      + change (@MC_id _ M (ICT_Objs ICT x)) with (ICT_Func _a (Tle_n x))%morphism.
         erewrite ICT_inv_Func_ICT_Func_2; trivial.
-      + rewrite MC_id_ICT_Func.
+      + change (@MC_id _ M (ICT_Objs ICT x)) with (ICT_Func _a (Tle_n x))%morphism.
         dependent destruction H'.
         erewrite ICT_inv_Func_ICT_Func_1; trivial.
       + cbn_rewrite <- (@F_compose _ _ ICT_inv_Func).
         match goal with
         |  [|- (?F _a ?x)%morphism = (?G _a ?y)%morphism] =>
-           cutrewrite (x = y); [trivial|apply proof_irrelevance]
+           cutrewrite (x = y); [trivial|apply Tle_is_HProp]
         end.
     Qed.
     (** This is an auxiliary cone to ICT_Func with apex Aₘ. *)
@@ -220,6 +214,8 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
     Next Obligation.
     Proof.
       unfold Aux_cone_fun.
+      cbn.
+      assert (h' := Tle_le h).
       repeat (try destruct gt_eq_gt_dec;
               try match goal with
                     [H : {_} + {_} |- _] => destruct H
@@ -230,11 +226,9 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
         repeat rewrite ICT_fs_ICT_inv_Func;
         repeat cbn_rewrite <- (@F_compose _ _ ICT_Func);
         repeat cbn_rewrite <- (@F_compose _ _ ICT_inv_Func);
-        try solve_simpl_omega_func_eq;
-        try rewrite MC_id_ICT_Func
-      .
+        try
+          (change (@MC_id _ M (ICT_Objs ICT c)) with (ICT_Func _a (Tle_n c))%morphism; auto; fail).
       + set (W := ICT_inv_Func_ICT_Func_2); cbn in W; erewrite W; auto.
-      + auto.
       + erewrite ICT_inv_Func_ICT_Func_2; auto.
       + erewrite ICT_inv_Func_ICT_Func_1; auto.
     Qed.
@@ -246,8 +240,12 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
     Qed.
 
     (** A simplified version of Trans_com of Cones into ICT_Func. *)
-    Lemma Cone_Trans_com_simplified (Cn : Cone ICT_Func) {c c' : nat} (h : c' ≤ c) :
-      Trans Cn c' =
+    Lemma Cone_Trans_com_simplified
+          (Cn : Cone ICT_Func)
+          {c c' : nat}
+          (h : (c' ≤ c)%omegacat)
+      :
+        Trans Cn c' =
       (MC_compose M) (Trans Cn c, (ICT_Func _a)%morphism h).
     Proof.
       etransitivity; [|apply (Trans_com Cn h)].
@@ -256,8 +254,12 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
     Qed.
 
     (** A simplified version of Trans_com of CoCones into ICT_inv_Func. *)
-    Lemma CoCone_Trans_com_simplified (Cn : CoCone ICT_inv_Func) {c c' : nat} (h : c' ≤ c) :
-      Trans Cn c' =
+    Lemma CoCone_Trans_com_simplified
+          (Cn : CoCone ICT_inv_Func)
+          {c c' : nat}
+          (h : (c' ≤ c)%omegacat)
+      :
+        Trans Cn c' =
       (MC_compose M) ((ICT_inv_Func _a)%morphism h, Trans Cn c).
     Proof.
       etransitivity; [|apply (Trans_com Cn h)].
@@ -328,12 +330,12 @@ identity morphism of Cn (Cn's apex). *)
                       [H : {_} + {_} |- _] => destruct H
                     end; ElimEq);
           try omega; cbn.
-        + rewrite (Cone_Trans_com_simplified Cn (Nat.le_trans _ _ _ (le_S _ _ (le_n m)) g)).
+        + rewrite (Cone_Trans_com_simplified Cn (Tle_trans _ _ _ (Tle_S _ _ (Tle_n m)) (le_Tle g))).
           rewrite (MC_assoc M).
           cbn_rewrite (CCIW_split_epi CCn).
           apply MC_id_unit_right.
         + apply CCIW_split_epi.
-        + cbn_rewrite (CoCone_Trans_com_simplified (CCIW_CoCone CCn) (Nat.le_trans _ _ _ (le_S _ _ (le_n n)) g)).
+        + cbn_rewrite (CoCone_Trans_com_simplified (CCIW_CoCone CCn) (Tle_trans _ _ _ (Tle_S _ _ (Tle_n n)) (le_Tle g))).
           rewrite (MC_assoc_sym M).
           cbn_rewrite (CCIW_split_epi CCn).
           apply MC_id_unit_left.
@@ -378,12 +380,12 @@ forms a cauchy sequence. *)
         destruct (ICT_approach_id ICT ε) as [N H1].
         exists N.
         intros n H2.
-        set (W := @Trans_com _ _ _ _ Cn' _ _ (le_S _ _ (le_n n)));
+        set (W := @Trans_com _ _ _ _ Cn' _ _ (Tle_S _ _ (Tle_n n)));
           cbn in W; rewrite From_Term_Cat in W; cbn in W;
           rewrite MC_id_unit_right in W; rewrite W; clear W.
-        cbn_rewrite ( CoCone_Trans_com_simplified (CCIW_CoCone CCn) (le_S _ _ (le_n n))).
+        cbn_rewrite ( CoCone_Trans_com_simplified (CCIW_CoCone CCn) (Tle_S _ _ (Tle_n n))).
         rewrite MC_assoc.
-        rewrite (MC_assoc_sym M _ _ _ _ _ ((ICT_Func _a)%morphism (le_S n n (le_n n)))).
+        rewrite (MC_assoc_sym M _ _ _ _ _ ((ICT_Func _a)%morphism (Tle_S n n (Tle_n n)))).
         rewrite
           <- (MC_id_unit_right _ _ _ (Trans (CCIW_CoCone CCn) (S n))) at 2.
         rewrite MC_assoc_sym.
