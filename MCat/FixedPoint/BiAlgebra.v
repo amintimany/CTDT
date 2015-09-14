@@ -190,6 +190,27 @@ compositions. *)
       id_unit_right := @BiAlg_Morp_id_unit_right;
       id_unit_left := @BiAlg_Morp_id_unit_left
     |}.
-  
-  
+
+  (** If two bi-algebras are isomorphic, then their underlying objects are. *)
+  Program Definition BiAlg_iso_obj_iso
+          {a b : BiAlgebra}
+          (f : (a ≃≃ b ::> BiAlg_Cat)%isomorphism)
+    :
+      (a ≃≃ b ::> C)%isomorphism
+    :=
+      {|
+        iso_morphism := BAM_forward (iso_morphism f);
+        inverse_morphism := BAM_forward (inverse_morphism f)
+      |}.
+
+  Next Obligation.
+  Proof.
+    apply (f_equal BAM_forward (left_inverse f)).
+  Qed.
+
+  Next Obligation.
+  Proof.
+    apply (f_equal BAM_forward (right_inverse f)).
+  Qed.
+    
 End BiAlgebras.
