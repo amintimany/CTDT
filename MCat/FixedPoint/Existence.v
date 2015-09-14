@@ -29,6 +29,9 @@ Local Open Scope order_scope.
 Local Open Scope metric_scope.
 Local Open Scope lattice_scope.
 
+(** We show that any locally-contractive functor F : Mᵒᵖ × M –≻ M where
+M is an M-category has a fixed point (an object A such that F(A, A) ≃ A).
+*)
 Section Existence.
   Context {L : MLattice}
           {M : MCat L}
