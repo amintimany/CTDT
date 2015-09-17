@@ -214,3 +214,13 @@ compositions. *)
   Qed.
     
 End BiAlgebras.
+
+Arguments BiAlg_Morph {_ _} _ _.
+Arguments BAM_forward {_ _ _ _} _.
+Arguments BAM_backward {_ _ _ _} _.
+Arguments BAM_forward_com {_ _ _ _} _.
+Arguments BAM_backward_com {_ _ _ _} _.
+
+Arguments BiAlg_obj {_ _} _.
+Arguments BiAlg_from_obj {_ _} _.
+Arguments BiAlg_to_obj {_ _} _.

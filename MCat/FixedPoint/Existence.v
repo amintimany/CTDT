@@ -38,7 +38,7 @@ Section Existence.
           (limits_of_ICT : ∀ ICT : IncreasingCauchyTower M, Limit (ICT_Func ICT))
           (F : LocallyContractive (MCat_Prod (MCat_Op M) M) M)
           (MTerm : Terminal M)
-          (strating_point :
+          (starting_point :
              (
                (terminal MTerm)
                  –≻
@@ -81,7 +81,7 @@ Section Existence.
       (ICT_of_Locally_Contractive_Func_obj (S n)))%morphism
     :=
     match n with
-      | O => strating_point
+      | O => starting_point
       | S n' =>
         F @_a
           (_, _)
