@@ -33,5 +33,6 @@ MCat/IncreasingCauchyTower/Ops_and_Props.v
 MCat/FixedPoint/Existence.v
 MCat/FixedPoint/BiAlgebra.v
 MCat/FixedPoint/FixedPoint_Initial_BiAlg.v
+MCat/FixedPoint/Uniqueness.v
 
 -R . CTDT

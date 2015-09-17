@@ -156,15 +156,15 @@ where f₀ = 1 is the terminal object of M and g₀ is the starting point
   Qed.
 
   (** The limit of the cauchy tower of a contractive functor is its fixed point. *)
-  Definition FixedPoint :
-    (
-      F _o
-        (
-          (limits_of_ICT ICT_of_Locally_Contractive_Func : M),
-          (limits_of_ICT ICT_of_Locally_Contractive_Func : M)
-        )
-        ≃ (limits_of_ICT ICT_of_Locally_Contractive_Func)
-    )%isomorphism
+  Definition FixedPoint_as_limit := limits_of_ICT ICT_of_Locally_Contractive_Func.
+
+  (** The limit of the cauchy tower of a contractive functor is its fixed point. *)
+  Definition FixedPoint : M := limits_of_ICT ICT_of_Locally_Contractive_Func.
+
+  (** We show that the limit of the cauchy tower of a contractive functor is indeed
+the fixed point of F. *)
+  Definition FixedPoint_is_fixed_point :
+    (F _o (FixedPoint, FixedPoint) ≃ FixedPoint)%isomorphism
   .
   Proof.
     match goal with
