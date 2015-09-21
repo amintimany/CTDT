@@ -34,5 +34,6 @@ MCat/FixedPoint/Existence.v
 MCat/FixedPoint/BiAlgebra.v
 MCat/FixedPoint/FixedPoint_Initial_BiAlg.v
 MCat/FixedPoint/Uniqueness.v
+NPreSheaf/NPreSheaf.v
 
 -R . CTDT

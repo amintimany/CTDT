@@ -251,6 +251,26 @@ Proof.
   }
 Qed.
 
+(** BD_Half_pow is monotone. *)
+Theorem BD_Half_pow_monotone (n k : nat) : n ≤ k → (BD_Half_pow k) ⊑ (BD_Half_pow n).
+Proof.
+  intros H.
+  induction H.
+  + apply BD_LE_Refl.
+  + eapply BD_LE_Trans; [|apply IHle].
+    apply BD_Half_of_non_expansive.
+Qed.
+
+(** Less than BD_Half_pow. *)
+Theorem Less_than_BD_Half_pow (d : BiDist) (n : nat) :
+  d n → d ⊑ (BD_Half_pow n).
+Proof.
+  intros H m H'.
+  apply (BD_decreases d _ n); trivial.
+  destruct (le_lt_dec m n); trivial.
+  exfalso; eapply BD_Half_pow_ge; eauto.
+Qed.
+  
 (** nᵗʰ power of 1/2 is positive. *)
 Theorem BD_Half_pow_pos (n : nat) : ⊥ ⊏ (BD_Half_pow n).
 Proof.
@@ -374,6 +394,23 @@ Proof.
   }
 Qed.
 
+Definition BD_dichotomy_left
+           (x : BiDist)
+           (H : BD_ApprType x)
+  :
+    {y : BiDist & BD_ApprType y & (⊥ ⊏ y) ∧ (y ⊏ x)}
+  :=
+    existT2
+      _
+      _
+      (BD_Half_of x)
+      match H in (BD_ApprType b) return (BD_ApprType (BD_Half_of b)) with
+      | Appr_Half_Pow n => Appr_Half_Pow (S n)
+      end
+      (conj (BD_pos_half_pos x (BD_appr_pos x H))
+            (BD_pos_half_strictly_less x (BD_appr_pos x H)))
+.
+  
 (** BiDist forms an MLattice. *)
 Program Definition BiDistML : MLattice :=
   {|
@@ -387,22 +424,7 @@ Program Definition BiDistML : MLattice :=
     ML_appr_top := Appr_Half_Pow 0;
     ML_appr_pos := BD_appr_pos;
     ML_appr_dominate_pos := _;
-    ML_bottom_dichotomy :=
-      inl
-        (
-          fun (x : BiDistPO) (H : BD_ApprType x) =>
-            existT2
-              (fun y : BiDistPO => BD_ApprType y)
-              (fun y : BiDistPO => (⊥ ⊏ y) ∧ (y ⊏ x)%order)
-              (BD_Half_of x)
-              (
-                match H in (BD_ApprType b) return (BD_ApprType (BD_Half_of b)) with
-                | Appr_Half_Pow n => Appr_Half_Pow (S n)
-                end
-              )
-              (conj (BD_pos_half_pos x (BD_appr_pos x H))
-                    (BD_pos_half_strictly_less x (BD_appr_pos x H)))
-        );
+    ML_bottom_dichotomy := inl BD_dichotomy_left;
     ML_all_approximatable :=
       fun x H =>
         existT2
@@ -422,7 +444,7 @@ Proof.
   apply H1.
   apply BD_Half_pow_Sn_n.
 Qed.
-  
+
 (** Powers of 1/2 are strictly decreasing *)
 Theorem BD_Half_pow_strict_decreasing (n k : nat) : k < n → BD_Half_pow n ⊏ BD_Half_pow k.
 Proof.
@@ -431,6 +453,29 @@ Proof.
   apply BD_pos_half_strictly_less; apply BD_Half_pow_pos.
   eapply (@LE_LT_Trans BiDistPO); [|apply IHle].
   apply BD_pos_half_strictly_less; apply BD_Half_pow_pos.
+Qed.
+
+(** If a power of 1/2 is less than another, then the exponent is greater. *)
+Theorem BD_Half_pow_strictly_less_exponent_strictly_less
+        (n k : nat) : BD_Half_pow n ⊏ BD_Half_pow k → k < n.
+Proof.
+  intros [H11 H12].
+  destruct (le_lt_dec n k) as [H2|H2]; trivial.
+  apply BD_Half_pow_monotone in H2.
+  contradict H12.
+  apply BD_LE_ASym; auto.
+Qed.
+
+(** Given a positive distance, half of it is positive. *)
+Theorem Strictly_less_less_than_BD_pos_half_pos :
+  ∀ d d', d ⊏ d' → BD_ApprType d → BD_ApprType d' → d ⊑ BD_Half_of d'.
+Proof.
+  intros d d' H1 H2 H3.
+  destruct H2 as [n].
+  destruct H3 as [m].
+  apply BD_Half_pow_strictly_less_exponent_strictly_less in H1.
+  assert (H5 : (S m) ≤ n) by omega.
+  apply (BD_Half_pow_monotone (S m) n H5).
 Qed.
 
 (** half_of forms a contraction rate! *)
