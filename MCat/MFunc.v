@@ -11,7 +11,6 @@ Require Import MCat.MCat.
 Section MFunc.
   Context {L : MLattice} (M M' : MCat L).
 
-
   (** A locally non-expansive functor is one whose arrow map
 is non-expansive. *)
   Record LocallyNonExpansive : Type :=
@@ -63,3 +62,71 @@ is contractive. *)
     }.
 
 End MFunc.
+
+(** The result of composition of a locally contractive functor and a locally
+non-expansive functor is locally contractive. *)
+Section LContr_LNE_Comp.
+  Context
+    {L : MLattice}
+    {M M' M'' : MCat L}
+    (F : LocallyContractive M M')
+    (G : LocallyNonExpansive M' M'')
+  .
+
+  Program Definition LContr_LNE_Comp : LocallyContractive M M'' :=
+    {|
+      LCN_FO := ((G ∘ F)%functor _o)%object;
+      LCN_ContrRate := LCN_ContrRate _ _ F;
+      LCN_FA :=
+        fun a b =>
+        Contractive_Controlled_Contractive
+          (
+            NonExp_Contr_Contr
+              (Controlled_Contractive_Contractive (@LCN_FA _ _ _ F a b))
+              (@LNE_FA _ _ _ G (LCN_FO _ _ F a) (LCN_FO _ _ F b))
+          );
+      LCN_F_id := F_id (G ∘ F)%functor;
+      LCN_F_compose := @F_compose _ _ (G ∘ F)%functor
+    |}.
+
+  (** Checking that the underlying functor of LContr_LNE_Comp is the composition of 
+individual functors. *)
+  Goal (LContr_LNE_Comp = (G ∘ F)%functor :> Functor _ _).
+    reflexivity.
+  Abort.
+
+End LContr_LNE_Comp.
+
+(** The result of composition of a locally non-expansive functor and a locally
+contractive functor is locally contractive. *)
+Section LNE_LContr_Comp.
+  Context
+    {L : MLattice}
+    {M M' M'' : MCat L}
+    (F : LocallyNonExpansive M M')
+    (G :  LocallyContractive M' M'')
+  .
+
+  Program Definition LNE_LContr_Comp : LocallyContractive M M'' :=
+    {|
+      LCN_FO := ((G ∘ F)%functor _o)%object;
+      LCN_ContrRate := LCN_ContrRate _ _ G;
+      LCN_FA :=
+        fun a b =>
+        Contractive_Controlled_Contractive
+          (
+            Contr_NonExp_Contr
+              (@LNE_FA _ _ _ F a b)
+              (Controlled_Contractive_Contractive (@LCN_FA _ _ _ G (@LNE_FO _ _ _ F a) (@LNE_FO _ _ _ F b)))
+          );
+      LCN_F_id := F_id (G ∘ F)%functor;
+      LCN_F_compose := @F_compose _ _ (G ∘ F)%functor
+    |}.
+
+  (** Checking that the underlying functor of LNE_LContr_Comp is the composition of 
+individual functors. *)
+  Goal (LNE_LContr_Comp = (G ∘ F)%functor :> Functor _ _).
+    reflexivity.
+  Abort.    
+    
+End LNE_LContr_Comp.
