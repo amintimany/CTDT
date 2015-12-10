@@ -24,11 +24,11 @@ Section CBULt_Exp.
 
   Next Obligation.
   Proof.
-    f_equal.
-    + intros H; rewrite H; trivial.
+    match goal with
+      [|- ?f1 (?f2 ?A) = ?g1 (?f2 ?B)] => cutrewrite (A = B); trivial
+    end.
     + FunExt.
-      rewrite UM_dist_sym.
-      trivial.
+      rewrite UM_dist_sym; trivial.
   Qed.
 
   Next Obligation.

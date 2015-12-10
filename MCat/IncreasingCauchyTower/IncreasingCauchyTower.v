@@ -87,10 +87,10 @@ Furthermore, the distance between fₙ ∘ gₙ and id_Aₙ₊₁ decreases as n
     (** A simple tactic to solve equality of OmegaCat_Func *)
     Ltac solve_simpl_omega_func_eq :=
       match goal with
-      |  [|- (?F _a ?x)%morphism = (?F _a ?y)%morphism] =>
-         cutrewrite (x = y); [trivial|apply Tle_is_HProp]
+      |  [|- (?F _a ?x)%morphism = (?G _a ?y)%morphism] =>
+         cutrewrite (x = y); [trivial|apply Tle_is_HProp]; fail
       | [|- OmegaCat.FA_fx _ ?f _ _ ?x = OmegaCat.FA_fx _ ?f _ _ ?y] =>
-        cutrewrite (x = y); [trivial|apply Tle_is_HProp]
+        cutrewrite (x = y); [trivial|apply Tle_is_HProp]; fail
       end.
 
     Local Hint Extern 1 => solve_simpl_omega_func_eq.
@@ -195,12 +195,9 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
       + change (@MC_id _ M (ICT_Objs ICT x)) with (ICT_Func _a (Tle_n x))%morphism.
         dependent destruction H'.
         erewrite ICT_inv_Func_ICT_Func_1; trivial.
-      + cbn_rewrite <- (@F_compose _ _ ICT_inv_Func).
-        match goal with
-        |  [|- (?F _a ?x)%morphism = (?G _a ?y)%morphism] =>
-           cutrewrite (x = y); [trivial|apply Tle_is_HProp]
-        end.
+      + cbn_rewrite <- (@F_compose _ _ ICT_inv_Func); auto.
     Qed.
+    
     (** This is an auxiliary cone to ICT_Func with apex Aₘ. *)
     Program Definition Aux_cone (m : nat) : Cone ICT_Func :=
       {|
@@ -215,19 +212,18 @@ gₘ ∘ ... ∘ gₙ₋₁ ∘ gₙ if n < m and fₙ ∘ ... ∘ fₘ₊₁ �
     Proof.
       unfold Aux_cone_fun.
       cbn.
-      assert (h' := Tle_le h).
       repeat (try destruct gt_eq_gt_dec;
               try match goal with
                     [H : {_} + {_} |- _] => destruct H
                   end; ElimEq);
-        try omega;
+        try (assert (h' := Tle_le h); omega; clear h'; fail);
         repeat rewrite (MC_id_unit_right M);
         repeat rewrite ICT_gs_ICT_Func;
         repeat rewrite ICT_fs_ICT_inv_Func;
         repeat cbn_rewrite <- (@F_compose _ _ ICT_Func);
         repeat cbn_rewrite <- (@F_compose _ _ ICT_inv_Func);
         try
-          (change (@MC_id _ M (ICT_Objs ICT c)) with (ICT_Func _a (Tle_n c))%morphism; auto; fail).
+          (change (@MC_id _ M (ICT_Objs ICT c)) with (ICT_Func _a (Tle_n c))%morphism; auto).
       + set (W := ICT_inv_Func_ICT_Func_2); cbn in W; erewrite W; auto.
       + erewrite ICT_inv_Func_ICT_Func_2; auto.
       + erewrite ICT_inv_Func_ICT_Func_1; auto.
@@ -405,6 +401,35 @@ forms a cauchy sequence. *)
 
     End CoCone_Interacting_With_and_related.
 
+    Program Definition limit_proj_n_o_inj_n_cauchy_forms_Cone_morph_from_Cn_to_Con_NT
+            (Cn : Cone ICT_Func)
+            (CCn : CoCone_Interacting_With Cn)
+            (Cn' : Cone ICT_Func)
+      :
+        (Cn' –≻ Cn)%nattrans
+      :=
+        {|
+          Trans :=
+            fun h =>
+              match h as u return (MC_Hom M ((Cn' _o)%object u) ((Cn _o)%object u)) with
+              | tt =>
+                (CUM_complete _ (proj_n_o_inj_n_cauchy Cn CCn Cn') : MC_Hom M (Cn' : M) (Cn : M))
+              end
+        |}.
+
+    Next Obligation.
+      repeat match goal with [H : unit|- _] => destruct H end.
+      repeat rewrite From_Term_Cat; cbn.
+      rewrite MC_id_unit_left, MC_id_unit_right.
+      trivial.
+    Qed.
+
+    Next Obligation.
+    Proof.
+      symmetry.
+      apply limit_proj_n_o_inj_n_cauchy_forms_Cone_morph_from_Cn_to_Con_NT_obligation_1.
+    Qed.
+      
     (** The limit of the sequence of projections of a cone Cn composed with injections
 (of a cocone interacting with Cn') forms a cone morphism from Cn' to Cn. *)
     Program Definition limit_proj_n_o_inj_n_cauchy_forms_Cone_morph_from_Cn_to_Con
@@ -415,29 +440,8 @@ forms a cauchy sequence. *)
         LoKan_Cone_Morph Cn' Cn :=
       {|
         cone_morph :=
-          {|
-            Trans :=
-              fun h =>
-                match h as u return (MC_Hom M ((Cn' _o)%object u) ((Cn _o)%object u)) with
-                | tt =>
-                  (CUM_complete _ (proj_n_o_inj_n_cauchy Cn CCn Cn') : MC_Hom M (Cn' : M) (Cn : M))
-                end
-          |}
+          limit_proj_n_o_inj_n_cauchy_forms_Cone_morph_from_Cn_to_Con_NT Cn CCn Cn'
       |}.
-
-    Next Obligation.
-    Proof.
-      repeat match goal with [H : unit|- _] => destruct H end.
-      repeat rewrite From_Term_Cat; cbn.
-      rewrite MC_id_unit_left, MC_id_unit_right.
-      trivial.
-    Qed.
-
-    Next Obligation.
-    Proof.
-      symmetry.
-      apply limit_proj_n_o_inj_n_cauchy_forms_Cone_morph_from_Cn_to_Con_obligation_1.
-    Qed.
 
     Next Obligation.
     Proof.
