@@ -16,7 +16,7 @@ Reserved Notation "⊓ᵍ y" (at level 75).
 
 Reserved Notation "⊔ᵍ y" (at level 75).
 
-Reserved Notation "∂( x , y )" (at level 75, no associativity).
+Reserved Notation "δ( x , y )" (at level 75, no associativity).
 
 Reserved Notation "'ρ' x" (at level 75, no associativity).
 

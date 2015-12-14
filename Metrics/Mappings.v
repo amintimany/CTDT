@@ -28,7 +28,7 @@ measure of the domain of the function.
     {
       NE_fun :> U → U';
       NE_non_expansive :
-        ∀ x y, (∂(NE_fun x, NE_fun y) ⊑ ∂(x, y))%order%metric
+        ∀ x y, (δ(NE_fun x, NE_fun y) ⊑ δ(x, y))%order%metric
     }.
 
   (** Two non-expansive mappings are equal if their underlying maps are. *)
@@ -63,7 +63,7 @@ We also require a contraction rate.
       CN_fun :> U → U';
       CN_ContrRate : ContrRate;
       CN_contractive :
-        ∀ x y, (∂(CN_fun x, CN_fun y) ⊑ CN_ContrRate (∂(x, y)))%order%metric
+        ∀ x y, (δ(CN_fun x, CN_fun y) ⊑ CN_ContrRate (δ(x, y)))%order%metric
     }.
   
   (** Two contractive mappings are equal if their underlying maps are. *)
@@ -100,7 +100,7 @@ Record Controlled_Contractive
   {
     CCN_fun :> U → U';
     CCN_contractive :
-      ∀ x y, (∂(CCN_fun x, CCN_fun y) ⊑ rt (∂(x, y)))%order%metric
+      ∀ x y, (δ(CCN_fun x, CCN_fun y) ⊑ rt (δ(x, y)))%order%metric
   }.
 
 Arguments CCN_fun {_ _ _ _} _ _.
@@ -331,7 +331,7 @@ Section iterate_Contractive_LE.
   .
 
   Theorem iterate_Contractive_LE :
-    ∀ n, (∂(iterate f x n, iterate f y n) ⊑ iterate (ρ f)%metric (∂(x, y)) n)%metric.
+    ∀ n, (δ(iterate f x n, iterate f y n) ⊑ iterate (ρ f)%metric (δ(x, y)) n)%metric.
   Proof.
     induction n; cbn; trivial.
     eapply PO_Trans; [apply CN_contractive|].

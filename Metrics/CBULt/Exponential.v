@@ -19,7 +19,7 @@ Section CBULt_Exp.
   Program Definition Exp_UM : UltraMetric L :=
     {|
       UM_Carrier := NonExpansive A B;
-      UM_distance := fun f g => (⊔ᵍ (fun u => ∂(f u, g u)))%metric%lattice
+      UM_distance := fun f g => (⊔ᵍ (fun u => δ(f u, g u)))%metric%lattice
     |}.
 
   Next Obligation.
@@ -50,7 +50,7 @@ Section CBULt_Exp.
     apply UM_zero_dist_eq.
     apply LE_Bottom_Bottom.
     rewrite <- H.
-    apply (lub_ub (fun w : _ => (∂( u w, v w))%metric)).
+    apply (lub_ub (fun w : _ => (δ( u w, v w))%metric)).
   Qed.    
 
   Next Obligation.
@@ -62,11 +62,11 @@ Section CBULt_Exp.
     eapply PO_Trans; [|
                       (apply (lub_ub (fun u : bool => if u then _ else _) _ true))
                      ].
-    apply (lub_ub (fun w : _ => (∂(u w, z w))%metric)).
+    apply (lub_ub (fun w : _ => (δ(u w, z w))%metric)).
     eapply PO_Trans; [|
                       (apply (lub_ub (fun u : bool => if u then _ else _) _ false))
                      ].
-    apply (lub_ub (fun w : _ => (∂(z w, v w))%metric)).
+    apply (lub_ub (fun w : _ => (δ(z w, v w))%metric)).
   Qed.
 
   Program Definition Separated_Cauchy (chs : Cauchy_Sequence Exp_UM)
@@ -84,7 +84,7 @@ Section CBULt_Exp.
     intros k k' H1 H2.
     specialize (H k k' H1 H2).
     eapply LE_LT_Trans; [|apply H].
-    apply (lub_ub (fun u : _ => (∂( CHS k u, CHS k' u))%metric)).
+    apply (lub_ub (fun u : _ => (δ( CHS k u, CHS k' u))%metric)).
   Qed.
 
   (** We need classical logic facts to prove that the limit of separated 
@@ -108,7 +108,7 @@ for bisected spaces. *)
   Next Obligation.
   Proof.
     intros chs x y; cbn.
-    destruct (classic (⊥ = (∂( x, y))%metric)%lattice) as [H|H].
+    destruct (classic (⊥ = (δ( x, y))%metric)%lattice) as [H|H].
     {
       rewrite <- H.
       replace y with x.
@@ -140,7 +140,7 @@ for bisected spaces. *)
     {
       destruct (dict _ (projT2 ε)) as [ε' Hd1 [Hd2 Hd3]].
       destruct (CHS_cauchy _ chs (existT _ _ Hd1)) as [N H].
-      cut (∀ (x : A) (n : nat), N ≤ n → ((∂(chs n x, CUM_complete B (Separated_Cauchy chs x)))%metric ⊑ ε')%order).
+      cut (∀ (x : A) (n : nat), N ≤ n → ((δ(chs n x, CUM_complete B (Separated_Cauchy chs x)))%metric ⊑ ε')%order).
       {
         intros H2.
         exists N.
@@ -159,7 +159,7 @@ for bisected spaces. *)
         apply lub_lst.
         intros []; [|apply H3].
         eapply PO_Trans; [|apply H].
-        + apply (lub_ub ((fun u : A => (∂( chs _ u, chs _ u))%metric))%lattice).
+        + apply (lub_ub ((fun u : A => (δ( chs _ u, chs _ u))%metric))%lattice).
         + trivial.
         + etransitivity; [apply H2|apply r_le_max].
       }
@@ -188,7 +188,7 @@ for bisected spaces. *)
         end.
         apply Hd2.
         eapply LE_LT_Trans; [|apply H].
-        + apply (lub_ub ((fun u : A => (∂( chs _ u, chs _ u))%metric))%lattice).
+        + apply (lub_ub ((fun u : A => (δ( chs _ u, chs _ u))%metric))%lattice).
         + trivial.
         + etransitivity; [apply H2|apply r_le_max].
     }
@@ -211,7 +211,7 @@ for bisected spaces. *)
     apply lub_lst; intros [].
     {
       eapply PO_Trans; [|apply (lub_ub (fun u : bool => if u then _ else _) _ true)].
-      eapply PO_Trans; [|apply (lub_ub (fun u : A => ∂(_, _) )%metric)].
+      eapply PO_Trans; [|apply (lub_ub (fun u : A => δ(_, _) )%metric)].
       apply PO_Refl.
     }
     {

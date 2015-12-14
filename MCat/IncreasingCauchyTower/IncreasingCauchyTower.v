@@ -41,7 +41,7 @@ Furthermore, the distance between fₙ ∘ gₙ and id_Aₙ₊₁ decreases as n
 
 #
 <pre>
-       ∀ ε, ∃ N, ∀ n, N ≤ n → ∂(fₙ ∘ gₙ, id_Aₙ₊₁) ⊏ ε
+       ∀ ε, ∃ N, ∀ n, N ≤ n → δ(fₙ ∘ gₙ, id_Aₙ₊₁) ⊏ ε
 </pre>
 #
 .
@@ -54,7 +54,7 @@ Furthermore, the distance between fₙ ∘ gₙ and id_Aₙ₊₁ decreases as n
       ICT_gs_split_epi : ∀ n, ((ICT_gs n) ∘ (ICT_fs n) = id)%morphism;
       ICT_approach_id :
         ∀ (ε : ApprType L),
-          {N : nat | ∀ n, N ≤ n → ∂(((ICT_fs n) ∘ (ICT_gs n))%morphism, id (ICT_Objs (S n))) ⊏ (projT1 ε)}
+          {N : nat | ∀ n, N ≤ n → δ(((ICT_fs n) ∘ (ICT_gs n))%morphism, id (ICT_Objs (S n))) ⊏ (projT1 ε)}
     }.
 
   Section ICT_Func_Limit.
@@ -308,7 +308,7 @@ identity morphism of Cn (Cn's apex). *)
           TRCC_CoCone :> CoCone_Interacting_With;
           TRCC_approach_id :
             ∀ (ε : ApprType L),
-              {N : nat | ∀ n, N ≤ n → ∂(((TRCC_CoCone n) ∘ (Trans Cn n))%morphism, id Cn) ⊏ (projT1 ε)}
+              {N : nat | ∀ n, N ≤ n → δ(((TRCC_CoCone n) ∘ (Trans Cn n))%morphism, id Cn) ⊏ (projT1 ε)}
         }.
 
       Context (CCn : CoCone_Interacting_With).

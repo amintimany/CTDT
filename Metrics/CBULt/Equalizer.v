@@ -17,7 +17,7 @@ Section CBULt_Equalzier.
   Program Definition Equalzier_UM : UltraMetric L :=
     {|
       UM_Carrier := {x : X | f x = g x};
-      UM_distance := fun x y => (∂(proj1_sig x, proj1_sig y))%metric
+      UM_distance := fun x y => (δ(proj1_sig x, proj1_sig y))%metric
     |}.
 
   Next Obligation.

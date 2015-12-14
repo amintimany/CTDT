@@ -22,7 +22,7 @@ Section CBULt_Product.
   Program Definition product_UM : UltraMetric L :=
     {|
       UM_Carrier := (UM_Carrier A) * (UM_Carrier B);
-      UM_distance := fun x y => (∂(fst x, fst y) ⊔ ∂(snd x, snd y))%metric%lattice
+      UM_distance := fun x y => (δ(fst x, fst y) ⊔ δ(snd x, snd y))%metric%lattice
     |}.
 
   Next Obligation.
@@ -48,7 +48,7 @@ Section CBULt_Product.
     end;
     match goal with
       [|- ?a = ?b] =>
-      cut (∂(a, b) = ⊥%lattice)%metric;
+      cut (δ(a, b) = ⊥%lattice)%metric;
         [
           intros H1; apply UM_zero_dist_eq; trivial |
           apply LE_Bottom_Bottom; rewrite <- H; auto
@@ -128,9 +128,9 @@ Section CBULt_Product.
       destruct (CHS_cauchy _ chs (existT _ _ Hd1)) as [N H].
       cut (∀ (n : nat),
               N ≤ n →
-              ((∂(fst (chs n), CUM_complete A (Separated_Cauchy_fst chs)))%metric ⊑ ε')%order
+              ((δ(fst (chs n), CUM_complete A (Separated_Cauchy_fst chs)))%metric ⊑ ε')%order
               ∧
-              ((∂(snd (chs n), CUM_complete B (Separated_Cauchy_snd chs)))%metric ⊑ ε')%order
+              ((δ(snd (chs n), CUM_complete B (Separated_Cauchy_snd chs)))%metric ⊑ ε')%order
           ).
       {
         intros H2.

@@ -23,7 +23,7 @@ distance from each other.
       CHS_cauchy :
         ∀ (ε : (ApprType L)),
           {N : nat | ∀ (n m : nat),
-              N <= n → N ≤ m → (∂(CHS_seq n, CHS_seq m)) ⊏ (projT1 ε)}
+              N <= n → N ≤ m → (δ(CHS_seq n, CHS_seq m)) ⊏ (projT1 ε)}
     }.
 
   Local Ltac simplify_1 :=
@@ -37,8 +37,8 @@ distance from each other.
   
   (** An alternative condition for cauchy sequences. *)
   Theorem Cauchy_condition_simpl (seq : Sequence U) :
-    (∀ (ε : (ApprType L)), {N : nat | ∀ n, N ≤ n → (∂(seq n, seq (S n))) ⊏ (projT1 ε)}) →
-    (∀ (ε : (ApprType L)), {N : nat | ∀ n m, N <= n → N ≤ m → (∂(seq n, seq m)) ⊏ (projT1 ε)}).
+    (∀ (ε : (ApprType L)), {N : nat | ∀ n, N ≤ n → (δ(seq n, seq (S n))) ⊏ (projT1 ε)}) →
+    (∀ (ε : (ApprType L)), {N : nat | ∀ n m, N <= n → N ≤ m → (δ(seq n, seq m)) ⊏ (projT1 ε)}).
   Proof.
     intros H ε.
     destruct (ML_bottom_dichotomy L) as [dicht|dicht].

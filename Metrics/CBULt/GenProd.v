@@ -23,7 +23,7 @@ Section CBULt_GenProd.
   Program Definition prod_UM : UltraMetric L :=
     {|
       UM_Carrier := ∀ x, (UM_Carrier (f x));
-      UM_distance := fun x y => (⊔ᵍ (fun u => ∂(x u, y u)))%metric%lattice
+      UM_distance := fun x y => (⊔ᵍ (fun u => δ(x u, y u)))%metric%lattice
     |}.
 
   Next Obligation.
@@ -50,11 +50,11 @@ Section CBULt_GenProd.
   Proof.
     cbn; intros x y H.
     extensionality u.
-    cut (∂(x u, y u) = ⊥%lattice)%metric;
+    cut (δ(x u, y u) = ⊥%lattice)%metric;
       [
         intros H1; apply UM_zero_dist_eq; trivial |
         apply LE_Bottom_Bottom; rewrite <- H;
-        apply (lub_ub (fun u => (∂(x u, y u))%metric))
+        apply (lub_ub (fun u => (δ(x u, y u))%metric))
       ].
   Qed.    
 
@@ -67,11 +67,11 @@ Section CBULt_GenProd.
     eapply PO_Trans; [|
                       (apply (lub_ub (fun u : bool => if u then _ else _) _ true))
                      ];
-    apply (lub_ub (fun u : _ => (∂(x u, z u))%metric)).
+    apply (lub_ub (fun u : _ => (δ(x u, z u))%metric)).
     eapply PO_Trans; [|
                       (apply (lub_ub (fun u : bool => if u then _ else _) _ false))
                      ];
-    apply (lub_ub (fun u : _ => (∂(z u, y u))%metric)).
+    apply (lub_ub (fun u : _ => (δ(z u, y u))%metric)).
   Qed.
 
   Program Definition Separated_Cauchy (chs : Cauchy_Sequence prod_UM)
@@ -89,7 +89,7 @@ Section CBULt_GenProd.
     intros k k' H1 H2.
     specialize (H k k' H1 H2).
     eapply LE_LT_Trans; [|apply H].
-    apply (lub_ub (fun u : _ => (∂( CHS k u, CHS k' u))%metric)).
+    apply (lub_ub (fun u : _ => (δ( CHS k u, CHS k' u))%metric)).
   Qed.    
     
   Program Definition prod_CUM : Complete_UltraMetric L :=
@@ -109,7 +109,7 @@ Section CBULt_GenProd.
     {
       destruct (dict _ (projT2 ε)) as [ε' Hd1 [Hd2 Hd3]].
       destruct (CHS_cauchy _ chs (existT _ _ Hd1)) as [N H].
-      cut (∀ (x : A) (n : nat), N ≤ n → ((∂(chs n x, CUM_complete (f x) (Separated_Cauchy chs x)))%metric ⊑ ε')%order).
+      cut (∀ (x : A) (n : nat), N ≤ n → ((δ(chs n x, CUM_complete (f x) (Separated_Cauchy chs x)))%metric ⊑ ε')%order).
       {
         intros H2.
         exists N.
@@ -128,7 +128,7 @@ Section CBULt_GenProd.
         apply lub_lst.
         intros []; [|apply H3].
         eapply PO_Trans; [|apply H].
-        + apply (lub_ub ((fun u : A => (∂( chs _ u, chs _ u))%metric))%lattice).
+        + apply (lub_ub ((fun u : A => (δ( chs _ u, chs _ u))%metric))%lattice).
         + trivial.
         + etransitivity; [apply H2|apply r_le_max].
       }
@@ -157,7 +157,7 @@ Section CBULt_GenProd.
         end.
         apply Hd2.
         eapply LE_LT_Trans; [|apply H].
-        + apply (lub_ub ((fun u : A => (∂( chs _ u, chs _ u))%metric))%lattice).
+        + apply (lub_ub ((fun u : A => (δ( chs _ u, chs _ u))%metric))%lattice).
         + trivial.
         + etransitivity; [apply H2|apply r_le_max].
     }
@@ -220,7 +220,7 @@ Section CBULt_GenProd.
   Proof.
     cbn.
     intros c x y.
-    apply (lub_ub (fun u : A => (∂( x u, y u))%metric)).
+    apply (lub_ub (fun u : A => (δ( x u, y u))%metric)).
   Qed.    
 
   Next Obligation.

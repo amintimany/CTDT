@@ -20,7 +20,7 @@ decreases below any positive distance as the sequence progresses. *)
       Lim_limit :
         ∀ (ε : (ApprType L)),
           {N : nat | ∀ (n : nat), N ≤ n →
-              ∂(Seq n, Lim) ⊏ (projT1 ε)}
+              δ(Seq n, Lim) ⊏ (projT1 ε)}
     }.
 
   Theorem Limit_unique (l l' : Limit) : l = l' :> U.
@@ -103,7 +103,7 @@ Section Limit_of_SubSeq.
     cut (∀ (ε : (ApprType L)),
             {N : nat | ∀ (n : nat),
                 N ≤ n →
-                ∂(Seq n, l') ⊏ (projT1 ε)}
+                δ(Seq n, l') ⊏ (projT1 ε)}
         ).
     {
       intros H.
@@ -164,7 +164,7 @@ Section Distance_of_Limits.
   Context {L : MLattice} {U : UltraMetric L} (Seq Seq' : Sequence U).
 
   Theorem Distance_of_Limits (δ : L) (l : Limit Seq) (l' : Limit Seq') :
-    ⊥ ⊏ δ → (∀ n, ∂(Seq n, Seq' n) ⊑ δ) → ∂(l, l') ⊑ δ.
+    ⊥ ⊏ δ → (∀ n, δ(Seq n, Seq' n) ⊑ δ) → δ(l, l') ⊑ δ.
   Proof.
     intros H1 H2.
     destruct (ML_all_approximatable _ _ H1) as [δ' H3 H4].

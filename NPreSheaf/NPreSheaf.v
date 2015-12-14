@@ -170,7 +170,7 @@ the sequence agree on the first n+1 elements.
     end.
     match goal with
       [|- Trans ?A ?x = Trans ?B ?x] =>
-      cut (∂(A, B)%metric ⊏ (BD_Half_pow (S c')))%order; [intros H|]
+      cut (δ(A, B)%metric ⊏ (BD_Half_pow (S c')))%order; [intros H|]
     end.
     {
       destruct H as [H1 H2].
@@ -229,7 +229,7 @@ of the given cauchy sequence. *)
     end.
     match goal with
       [|- Trans ?A ?x = Trans ?B ?x] =>
-      cut (∂(A, B)%metric ⊏ (BD_Half_pow (S k)))%order; [intros H5|]
+      cut (δ(A, B)%metric ⊏ (BD_Half_pow (S k)))%order; [intros H5|]
     end.
     {
       destruct H5 as [H51 H52].
